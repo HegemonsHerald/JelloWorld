@@ -19,7 +19,7 @@ public class Ducklygon extends GraphicsProgram {
 		GPoint lastDuck = new GPoint(2.0,1.0);
 
 		// Loop yay, note that the loop starts with the second duck cause we already know where the first duck goes!
-		for (int i = 1; i <= n+1; i++) {
+		for (int i = 1; i <= n; i++) {
 
 			// How far have you gotten round the duck-lygon?
 			double currAngle = i * (2 * Math.PI / n);
@@ -33,9 +33,6 @@ public class Ducklygon extends GraphicsProgram {
 			// Make the last duck be the current duck
 			lastDuck = currDuck;
 		}
-
-		// Wanna draw another duck-lygon?
-		drawDucklygon();
 	}
 
 	public void run() {
@@ -49,11 +46,4 @@ public class Ducklygon extends GraphicsProgram {
 		drawDucklygon();
 	}
 
-	// C-F11 is eclipse's command for executing
-	// F5 is eclipse's command for reloading
-
-	// sensible nmaps for eclipse java projects
-	// - <j for insert comment slashes	nnoremap <j I// <Esc>
-	// - <k for remove comment slashes	nnoremap <k ^xxx
-	// - re for reload
 }

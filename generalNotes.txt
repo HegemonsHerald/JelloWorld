@@ -1,0 +1,7 @@
+C-F11 is eclipse's command for executing
+F5 is eclipse's command for reloading
+
+sensible nmaps for eclipse java projects
+- <j for insert comment slashes	nnoremap <j I// <Esc>
+- <k for remove comment slashes	nnoremap <k ^xxx
+- re for reload
