@@ -5,11 +5,12 @@ import acm.program.ConsoleProgram;
 /**
  * Are these enough periods: ........ ?
  *
- * A program that calculates an account balance after one and two years for a given balance and annual interest rate.
+ * A program that calculates an account balance after one and two years for a
+ * given balance and annual interest rate.
  */
 public class Interest extends ConsoleProgram {
 
-	// run...
+	/** run... */
 	public void run() {
 
 		// Get input
@@ -27,12 +28,14 @@ public class Interest extends ConsoleProgram {
 		 */
 
 		// Output
+
+		// Cause I want my ducky plot:
 		println("In the first year the Ducky has: " + firstYearBalance);
 		println("In the second year the Ducky has: " + secondYearBalance);
+
+		// Cause the tests don't want ducky plot:
 		println("The balance after the first year is " + firstYearBalance);
 		println("The balance after the second year is " + secondYearBalance);
-		println("The balance after the first year is 1050.0");
-		println("The balance after the second year is 1102.5");
 
 	}
 
