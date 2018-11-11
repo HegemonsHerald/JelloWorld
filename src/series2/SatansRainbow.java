@@ -65,10 +65,8 @@ public class SatansRainbow extends GraphicsProgram {
 		palette[6] = background; // the last color will used for the innermost circle, which should make the rainbow seem transparent
 
 		// I want to gradually adjust the angles for the Arcs
-		//int startAngle = 215;
-		//int endAngle = 110;
-		int startAngle = 180;
-		int endAngle = 180;
+		int startAngle = 185;
+		int endAngle = 170;
 
 		// Draw all the Arcs!
 		for (int i = 0; i < 7; i++) {
@@ -84,8 +82,8 @@ public class SatansRainbow extends GraphicsProgram {
 			GArc arc = new GArc(w, h, startAngle, endAngle);
 
 			// Update the angles (looks better if you do this)
-			startAngle += 7;
-			endAngle -= 14;
+			startAngle -= 1;
+			endAngle += 2;
 
 			// Set the colors
 			arc.setFilled(true);
@@ -104,19 +102,6 @@ public class SatansRainbow extends GraphicsProgram {
 			add(arc, x, y);
 
 		}
-
-		/* Another Arc, that makes the horns have the right shape */
-
-		// Make Arc
-		GArc hornShaper = new GArc(halfWidth, halfHeight / 2, 0, 360);
-
-		// Style Arc
-		hornShaper.setFilled(true);
-		hornShaper.setColor(background);
-
-		// Show Arc
-		add(hornShaper, halfWidth - halfWidth / 2, halfHeight / 6);
-		// There's no deeper magic to these numbers, I just fiddled with them until it looked about right
 
 
 		/* Draw the Face of Satan */
@@ -268,6 +253,47 @@ public class SatansRainbow extends GraphicsProgram {
 		double satanX = halfWidth - (satan.getWidth() / 2);
 		double satanY = satan.getHeight();
 		add(satan, satanX, satanY);
+
+
+		/* Ok fine.... */
+
+		GLabel fine = new GLabel("Ok, fine. Have your rainbow...");
+
+		fine.setColor(Color.WHITE);
+
+		double fineY = fine.getHeight() + 80;
+		add(fine, 10 + width, fineY);
+
+		// Draw all the Arcs!
+		for (int j = 0; j < 7; j++) {
+
+			// The Arcs will get smaller by the change of this offset
+			int offset = j * 10;
+
+			// Width and height of the current Arc
+			int w = halfWidth - offset;
+			int h = halfHeight - offset;
+
+			// Make the Arc
+			GArc arc = new GArc(w, h, 5, 170);
+
+			// Set the colors
+			arc.setFilled(true);
+			arc.setColor(palette[j]);
+
+
+			/* Draw the Arc */
+
+			// Put the Arc off to the side!
+			int x = 10 + width + (offset / 2);
+			int y = 10 + 100   + (offset / 2);
+
+			// Actually draw the Arc
+			add(arc, x, y);
+
+		}
+
+
 
 	}
 
