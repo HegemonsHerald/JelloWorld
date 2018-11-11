@@ -22,8 +22,8 @@ public class Starlygon extends GraphicsProgram {
 
 		// Get Input
 		int n = readInt("Well, then. How many pointy bits? ");
-		int innerRadius = readInt("And an inner radius, please? ");
 		int outerRadius = readInt("How about an outer radius? ");
+		int innerRadius = readInt("And an inner radius, please? ");
 
 		if (innerRadius > outerRadius) {
 			println("You do know the Starlygon won't be completely visible, if you enter an outer Radius that's larger than the inner Radius, right?");
