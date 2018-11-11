@@ -65,8 +65,10 @@ public class SatansRainbow extends GraphicsProgram {
 		palette[6] = background; // the last color will used for the innermost circle, which should make the rainbow seem transparent
 
 		// I want to gradually adjust the angles for the Arcs
-		int startAngle = 185;
-		int endAngle = 170;
+		//int startAngle = 215;
+		//int endAngle = 110;
+		int startAngle = 180;
+		int endAngle = 180;
 
 		// Draw all the Arcs!
 		for (int i = 0; i < 7; i++) {
@@ -82,8 +84,8 @@ public class SatansRainbow extends GraphicsProgram {
 			GArc arc = new GArc(w, h, startAngle, endAngle);
 
 			// Update the angles (looks better if you do this)
-			startAngle -= 1;
-			endAngle += 2;
+			startAngle += 7;
+			endAngle -= 14;
 
 			// Set the colors
 			arc.setFilled(true);
@@ -102,6 +104,19 @@ public class SatansRainbow extends GraphicsProgram {
 			add(arc, x, y);
 
 		}
+
+		/* Another Arc, that makes the horns have the right shape */
+
+		// Make Arc
+		GArc hornShaper = new GArc(halfWidth, halfHeight / 2, 0, 360);
+
+		// Style Arc
+		hornShaper.setFilled(true);
+		hornShaper.setColor(background);
+
+		// Show Arc
+		add(hornShaper, halfWidth - halfWidth / 2, halfHeight / 6);
+		// There's no deeper magic to these numbers, I just fiddled with them until it looked about right
 
 
 		/* Draw the Face of Satan */
