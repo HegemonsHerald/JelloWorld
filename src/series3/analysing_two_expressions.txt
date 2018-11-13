@@ -1,0 +1,68 @@
+### Expressions and Parenthesis
+
+#### First Expression
+
+```
+expression:                      (5.0 / 9.0) * (fahrenheit - 32)
+expression with parenthesis:    ((5.0 / 9.0) * (fahrenheit - 32))
+really fully parenthesized:     (((5.0) / (9.0)) * ((fahrenheit) - (32)))
+```
+
+I parenthesize the way I do, mostly because it's actually needed to override precedence.  
+But let's take this apart, shall we?
+
+`(5.0 / 9.0)` is parenthesized in the original expression merely for readability, the division and
+multiplication operators have equal binding power after all and since Java does left-to-right evaluation,
+this thing would be evaluated like that anyways. I personally like to think of this
+thing as a fraction in fractional notation and this comes closest to actually being that.
+
+`(fahrenheit - 32)` is parenthesized because according to the task's requirements it has to be:  
+`fahrenheit` and `32` shall be added before their sum is multiplied with `(5.0 / 9.0)`? Dispense with parens!
+
+The only other set of parenthesis left to draw then, is the pair around the entire expression, which
+basically just says: "Yeah, this evaluates to something, and that something should be formed before you use it
+in some other context!"
+
+**...** *But that's not the whole story, is it?*
+
+Well, there also is the "really fully parenthesized" version. It contains parenthesis around every single
+term, which is of course valid, and also contains absolutely all parenthesis you can cram in there. It's also
+completely unreadable, so *maybe* don't do that...
+
+**Sidenote:** the expression contains `5.0`, `9.0` and `32`, which are number literals and `fahrenheit`, which
+is a variable, so it fits the necessities.
+
+#### Second Expression
+
+```
+expression:                       conversionMode != 1  &&  conversionMode != 2
+expression with parenthesis:    ((conversionMode != 1) && (conversionMode != 2))
+really fully parenthesized:     (((conversionMode) != (1)) && ((conversionMode) != (2)))
+```
+
+**Sidenote:** I'd like to point out, that one literally can just use the fahrenheit to celsius expression.
+That would be boring. One could also use `sourceTemperature == SENTINEL`, which too, would be boring.
+
+The parenthesis around the two not-equal-comparisons aren't in the unparenthesized version, because due to
+operator precedence they are evaluated before the `&&` is.
+
+Beyond that the first version only lacks the parenthesis around the entire thing for the same reason as
+in the expression in the first example.
+
+Regarding the "really fully parenthesized" version the same goes as above, as well.
+
+**Sidenote:** the expression contains `conversionMode` twice, which is a variable. It also contains `1` and `2`,
+which are number literals.
+
+
+gD
+gI
+gN
+gf
+
+visual mode
+ o and O
+ gq
+
+visual block mode
+ $
