@@ -58,9 +58,8 @@ for y = 0; y < 8 { // loop the rows
 
 /*
  * How to do this functionally...?
- * - you can just implement exactly these loops with recursion.
- * - you can define a function drawRow, that takes the index of the row to draw
- *   and calls drawRect with y and x 4 times, with the x increased each time, depending on the offset
+ * ... Did that. Now the only thing left, would be a declarative way of doing this, but I'm too unfamiliar and it
+ * wouldn't be a beautiful solution.
  *
  * 	HARDCODED
  *	drawRow(n) {
