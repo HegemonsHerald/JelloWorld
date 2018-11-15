@@ -10,7 +10,7 @@ import acm.graphics.*;
 public class Chessboard_Imperative extends GraphicsProgram {
 
 	// Because the ACM does pixels.
-	private static final int SCALING_FACTOR = 10;
+	private static final int SCALING_FACTOR = 100;
 
 	/**
 	 * Draws a rectangle.
@@ -24,7 +24,7 @@ public class Chessboard_Imperative extends GraphicsProgram {
 		int height = 1 * SCALING_FACTOR;
 
 		int x = xCood * SCALING_FACTOR;
-		int y = yCood * SCALING_FACTOR;
+		int y = (yCood - 1) * SCALING_FACTOR; // yCood-1 because the row count starts at 1 but the canvas' pixels are 0-indexed
 
 		// Create the background rectanlge and draw it
 		GRect bgRect = new GRect(x, y, width, height);
