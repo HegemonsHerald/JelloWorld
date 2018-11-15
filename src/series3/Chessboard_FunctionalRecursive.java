@@ -10,7 +10,7 @@ import acm.graphics.*;
 public class Chessboard_FunctionalRecursive extends GraphicsProgram {
 
 	// Because the ACM does pixels.
-	private static final int SCALING_FACTOR = 10;
+	private static final int SCALING_FACTOR = 100;
 
 	private static final int ROWS    = 8;
 	private static final int COLUMNS = 8;
