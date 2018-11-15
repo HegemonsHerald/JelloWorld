@@ -24,7 +24,7 @@ public class Chessboard_FunctionalExplicit extends GraphicsProgram {
 		int height = 1 * SCALING_FACTOR;
 
 		int x = xCood * SCALING_FACTOR;
-		int y = (yCood - 1) * SCALING_FACTOR; // yCood-1 because the row count starts at 1 but the canvas' pixels are 0-indexed
+		int y = yCood * SCALING_FACTOR;
 
 		// Create the background rectanlge and draw it
 		GRect bgRect = new GRect(x, y, width, height);
@@ -52,7 +52,7 @@ public class Chessboard_FunctionalExplicit extends GraphicsProgram {
 	 * @param n	the row's number, starts at 1
 	 */
 	private void drawRow(int n) {
-		int offset = (n%2 == 0) ? -1 : 0; // If the row's number is even, use -1 as offset, else use 0
+		int offset = (n%2 == 0) ? 0 : -1; // If the row's number is even, use 0 as offset, else use -1
 		drawRect(offset + 1, n);	  // odd row: 0+1=1  even row: -1+1=0
 		drawRect(offset + 3, n);	  // odd row: 0+3=3  even row: -1+3=2
 		drawRect(offset + 5, n);	  // ...          5  ...            4
@@ -63,6 +63,7 @@ public class Chessboard_FunctionalExplicit extends GraphicsProgram {
 	 * Draw a Chessboard.
 	 */
 	private void drawBoard() {
+		drawRow(0);
 		drawRow(1);
 		drawRow(2);
 		drawRow(3);
@@ -70,7 +71,6 @@ public class Chessboard_FunctionalExplicit extends GraphicsProgram {
 		drawRow(5);
 		drawRow(6);
 		drawRow(7);
-		drawRow(8);
 	}
 
 	@Override
