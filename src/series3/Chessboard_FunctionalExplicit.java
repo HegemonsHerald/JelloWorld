@@ -7,13 +7,10 @@ import acm.graphics.*;
 /**
  * I hope you realise you told us in class how to solve this problem...?
  */
-public class Chessboard extends GraphicsProgram {
+public class Chessboard_FunctionalExplicit extends GraphicsProgram {
 
 	// Because the ACM does pixels.
 	private static final int SCALING_FACTOR = 10;
-
-	private static final int ROWS    = 8;
-	private static final int COLUMNS = 8;
 
 	/**
 	 * Draws a rectangle.
@@ -54,31 +51,26 @@ public class Chessboard extends GraphicsProgram {
 	 *
 	 * @param n	the row's number, starts at 1
 	 */
-	private void drawRow(int x, int y) {
-		if (x < COLUMNS) {
-			drawRect(x, y);
-			drawRow(x+2, y);
-		}
+	private void drawRow(int n) {
+		int offset = (n%2 == 0) ? -1 : 0; // If the row's number is even, use -1 as offset, else use 0
+		drawRect(offset + 1, n);	  // odd row: 0+1=1  even row: -1+1=0
+		drawRect(offset + 3, n);	  // odd row: 0+3=3  even row: -1+3=2
+		drawRect(offset + 5, n);	  // ...          5  ...            4
+		drawRect(offset + 7, n);	  // ...          7  ...            6
 	}
 
 	/**
 	 * Draw a Chessboard.
-	 * Technically this is a recursion setup function
 	 */
 	private void drawBoard() {
-		int y = 0;
-		drawBoardRecurr(y);
-	}
-
-	/**
-	 * You don't need to know about this.
-	 * @param y	the current column's number
-	 */
-	private void drawBoardRecurr(int y) {
-		if (y < ROWS) {
-			drawRow( (y%2 == 0) ? 1 : 0, y );
-			drawBoardRecurr(++y);
-		}
+		drawRow(1);
+		drawRow(2);
+		drawRow(3);
+		drawRow(4);
+		drawRow(5);
+		drawRow(6);
+		drawRow(7);
+		drawRow(8);
 	}
 
 	@Override

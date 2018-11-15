@@ -7,13 +7,10 @@ import acm.graphics.*;
 /**
  * I hope you realise you told us in class how to solve this problem...?
  */
-public class Chessboard extends GraphicsProgram {
+public class Chessboard_Imperative extends GraphicsProgram {
 
 	// Because the ACM does pixels.
 	private static final int SCALING_FACTOR = 10;
-
-	private static final int ROWS    = 8;
-	private static final int COLUMNS = 8;
 
 	/**
 	 * Draws a rectangle.
@@ -46,46 +43,31 @@ public class Chessboard extends GraphicsProgram {
 		add(fgRect);
 	}
 
-
-	/**
-	 * Draw a row of the Chessboard.
-	 * If the row's number is even, it draws the first rect at position 1,
-	 * else at position 0. It creates a checker pattern, if used repeatedly.
-	 *
-	 * @param n	the row's number, starts at 1
-	 */
-	private void drawRow(int x, int y) {
-		if (x < COLUMNS) {
-			drawRect(x, y);
-			drawRow(x+2, y);
-		}
-	}
-
-	/**
-	 * Draw a Chessboard.
-	 * Technically this is a recursion setup function
-	 */
-	private void drawBoard() {
-		int y = 0;
-		drawBoardRecurr(y);
-	}
-
-	/**
-	 * You don't need to know about this.
-	 * @param y	the current column's number
-	 */
-	private void drawBoardRecurr(int y) {
-		if (y < ROWS) {
-			drawRow( (y%2 == 0) ? 1 : 0, y );
-			drawBoardRecurr(++y);
-		}
-	}
-
 	@Override
 	public void run() {
 
-		drawBoard();
+		// Loop over the rows (y-coordinates)
+		// Note: this starts at 1 because the drawing offset happens depending on odd/eveness
+		for (int y = 1; y <= 8; y++) {
 
+			// Loop over the columns (x-coordiantes)
+			for (int x = 0; x < 8; x++) { // loop the columns
+
+				// Learn whether y and x are even or odd
+				int moduloY = y%2;
+				int moduloX = x%2;
+
+				// If you are on an even row, draw a rect for all the even x's
+				if (moduloY==0 && moduloX==0)
+					drawRect(x, y);
+
+				// If you are on an odd row, draw a rect for all the odd x's
+				else if (moduloY!=0 && moduloX!=0)
+					drawRect(x, y);
+
+				// Because even and odd numbers alternate, this will produce a checker pattern
+			}
+		}
 	}
 
 }
