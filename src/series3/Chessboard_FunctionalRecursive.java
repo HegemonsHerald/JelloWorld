@@ -7,10 +7,10 @@ import acm.graphics.*;
 /**
  * I hope you realise you told us in class how to solve this problem...?
  */
-public class Chessboard extends GraphicsProgram {
+public class Chessboard_FunctionalRecursive extends GraphicsProgram {
 
 	// Because the ACM does pixels.
-	private static final int SCALING_FACTOR = 10;
+	private static final int SCALING_FACTOR = 100;
 
 	private static final int ROWS    = 8;
 	private static final int COLUMNS = 8;
@@ -88,39 +88,63 @@ public class Chessboard extends GraphicsProgram {
 	 * If the row's number is even, it draws the first rect at position 1,
 	 * else at position 0. It creates a checker pattern, if used repeatedly.
 	 *
-	 * @param n	the row's number, starts at 1
+	 * @param width	how wide the rows are (for drawing termination)
+	 * @param x	the x coordinate of the to-be-drawn rect
+	 * @param y	the row's number, starts at 1 = the y coordinate of the to-be-drawn rect
 	 */
-	private void drawRow(int x, int y) {
-		if (x < COLUMNS) {
+	private void drawRow(int width, int x, int y) {
+
+		// As long as you haven't reached the end of the row...
+		if (x < width) {
+
+			// ... draw a rectangle at the current position...
 			drawRect(x, y);
-			drawRow(x+2, y);
+
+			// ... and do the same with the next position
+			drawRow(width, x+2, y);
 		}
 	}
 
 	/**
 	 * Draw a Chessboard.
 	 * Technically this is a recursion setup function
+	 *
+	 * @param width		how wide the board should be
+	 * @param height	how tall the board should be
 	 */
-	private void drawBoard() {
+	private void drawBoard(int width, int height) {
+
+		// Set up the internal line-counter for drawBoardRecurr
 		int y = 0;
-		drawBoardRecurr(y);
+
+		// Call the recurring drawer
+		drawBoardRecurr(width, height, y);
 	}
 
 	/**
 	 * You don't need to know about this.
+	 * This function does the actual drawing
 	 * @param y	the current column's number
 	 */
-	private void drawBoardRecurr(int y) {
-		if (y < ROWS) {
-			drawRow( (y%2 == 0) ? 1 : 0, y );
-			drawBoardRecurr(++y);
+	private void drawBoardRecurr(int width, int height, int y) {
+
+		// As long as you haven't reached the last row...
+		if (y < height) {
+			
+			// ... draw another row...
+			drawRow( width, (y%2 == 0) ? 1 : 0, y );
+			// Ternary: If the row is even, start drawing rects at 1, else at 0 → checker pattern
+
+			// ... and repeat that with the next row
+			drawBoardRecurr(width, height, ++y);
 		}
 	}
 
 	@Override
 	public void run() {
 
-		drawBoard();
+		// Draw an 8 by 8 chess board
+		drawBoard(8, 8);
 
 	}
 

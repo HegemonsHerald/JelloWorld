@@ -10,7 +10,7 @@ import acm.graphics.*;
 public class Chessboard_Imperative extends GraphicsProgram {
 
 	// Because the ACM does pixels.
-	private static final int SCALING_FACTOR = 10;
+	private static final int SCALING_FACTOR = 100;
 
 	/**
 	 * Draws a rectangle.
@@ -47,8 +47,7 @@ public class Chessboard_Imperative extends GraphicsProgram {
 	public void run() {
 
 		// Loop over the rows (y-coordinates)
-		// Note: this starts at 1 because the drawing offset happens depending on odd/eveness
-		for (int y = 1; y <= 8; y++) {
+		for (int y = 0; y < 8; y++) {
 
 			// Loop over the columns (x-coordiantes)
 			for (int x = 0; x < 8; x++) { // loop the columns
@@ -59,11 +58,11 @@ public class Chessboard_Imperative extends GraphicsProgram {
 
 				// If you are on an even row, draw a rect for all the even x's
 				if (moduloY==0 && moduloX==0)
-					drawRect(x, y);
+					drawRect(x+1, y); // x+1 offset of chessboards: row 0 starts with a white rect, not a black one
 
 				// If you are on an odd row, draw a rect for all the odd x's
 				else if (moduloY!=0 && moduloX!=0)
-					drawRect(x, y);
+					drawRect(x-1, y); // x-1 offset of chessboards: row 1 starts with a black rect, not a white one
 
 				// Because even and odd numbers alternate, this will produce a checker pattern
 			}
