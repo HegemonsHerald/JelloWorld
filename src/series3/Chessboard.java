@@ -16,6 +16,42 @@ public class Chessboard extends GraphicsProgram {
 	private static final int COLUMNS = 8;
 
 	/**
+	 * Draw the Lettering
+	 */
+	private void drawLettering() {
+		drawLetteringX(10, 10); 	// Draw the letters above the board
+		drawLetteringX(10, 100);	// Draw the letters below the board
+		drawLetteringY(10, 10); 	// Draw the lettering left of the board
+		drawLetteringY(100, 10);	// Draw the lettering right of the board
+	}
+
+	/**
+	 * Draw Lettering in X direction
+	 * @param xOffset	how far to offset the row in x direction
+	 * @param yOffset	how far to offset the row in y direction
+	 */
+	private void drawLetteringX(int xOffset, int yOffset) {
+		String letters[8] = ["A", "B", "C", "D", "E", "F", "G", "H"];
+		for (int i = 0; i < 8; i++) {
+			GLabel letter = new GLabel(letters[i]);
+			add(letter, x, y);
+		}
+	}
+
+	/**
+	 * Draw Lettering in Y direction
+	 * @param xOffset	how far to offset the column in x direction
+	 * @param yOffset	how far to offset the row in y direction
+	 */
+	private void drawLetteringY(int xOffset, int yOffset) {
+		String letters[8] = ["1", "2", "3", "4", "5", "6", "7", "8"];
+		for (int i = 0; i < 8; i++) {
+			GLabel letter = new GLabel(letters[i]);
+			add(letter, x, y);
+		}
+	}
+
+	/**
 	 * Draws a rectangle.
 	 * @param x	x coordiante of the rect's anchor
 	 * @param y	y coordiante of the rect's anchor
