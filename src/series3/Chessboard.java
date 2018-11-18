@@ -7,7 +7,7 @@ import acm.graphics.*;
 /**
  * I hope you realise you told us in class how to solve this problem...?
  */
-public class Chessboard_FunctionalExplicit extends GraphicsProgram {
+public class Chessboard extends GraphicsProgram {
 
 	// Because the ACM does pixels.
 	private static final int SCALING_FACTOR = 10;

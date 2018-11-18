@@ -14,8 +14,8 @@ public class Chessboard_Imperative extends GraphicsProgram {
 
 	/**
 	 * Draws a rectangle.
-	 * @param x	x coordiante of the rect's anchor
-	 * @param y	y coordiante of the rect's anchor
+	 * @param xCood	x coordiante of the rect's anchor
+	 * @param yCood	y coordiante of the rect's anchor
 	 */
 	private void drawRect(int xCood, int yCood) {
 
