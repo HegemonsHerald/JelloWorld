@@ -10,7 +10,6 @@ import acm.graphics.*;
 public class Chessboard extends GraphicsProgram {
 
 	// Because the ACM does pixels.
-	private static final int SCALING_FACTOR = 10;
 	private static final int SCALING_FACTOR = 100;
 	private static final int BOARD_X_OFFSET = 40;
 	private static final int BOARD_Y_OFFSET = 40;
@@ -72,7 +71,8 @@ public class Chessboard extends GraphicsProgram {
 
 			// Where exactly do yo put it?
 			// construction analogous to drawLabelsX
-			double y = i * SCALING_FACTOR - (label.getHeight() / 2) + startY;
+			// (7-i) because 0-indexed letters and we want to have them back-to-front iterated.
+			double y = (7-i) * SCALING_FACTOR - (label.getHeight() / 2) + startY;
 			double x = startX - (label.getWidth() / 2);
 
 			// Draw label
