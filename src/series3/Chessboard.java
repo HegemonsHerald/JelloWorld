@@ -11,6 +11,74 @@ public class Chessboard extends GraphicsProgram {
 
 	// Because the ACM does pixels.
 	private static final int SCALING_FACTOR = 10;
+	private static final int SCALING_FACTOR = 100;
+	private static final int BOARD_X_OFFSET = 40;
+	private static final int BOARD_Y_OFFSET = 40;
+
+	/**
+	 * Draw the labels.
+	 */
+	private void drawLabels() {
+		// 50 is half the width of one field in px
+		// 800 is the height of the board in px
+		// honestly, I just smart-guessed these values
+		drawLabelsX(40+50,  30);
+		drawLabelsX(40+50,  800+70);
+		drawLabelsY(20,     50+50);
+		drawLabelsY(800+60, 50+50);
+	}
+
+	/**
+	 * Draw horizontal labels.
+	 * @param startX	where the line of letters starts in X direction
+	 * @param startY	where the line of letters starts in Y direction
+	 */
+	private void drawLabelsX(double startX, double startY) {
+
+		// Values to go from
+		String letters[] = {"A", "B", "C", "D", "E", "F", "G", "H"};
+
+		// Draw 8 labels
+		for (int i=0; i<8; i++) {
+			// Make a label with the current letter
+			GLabel label = new GLabel(letters[i]);
+
+			// Where exactly do yo put it?
+			// i*SCALING_FACTOR		= position of the field
+			// ... + startX			= position offset from borders
+			// ... - label.getWidth() / 2	= position of the label, centered
+			double x = i * SCALING_FACTOR - (label.getWidth() / 2) + startX;
+			double y = startY - (label.getHeight() / 2);
+
+			// Draw label
+			add(label, x, y);
+		}
+	}
+
+	/**
+	 * Draw vertical labels.
+	 * @param startX	where the line of letters starts in X direction
+	 * @param startY	where the line of letters starts in Y direction
+	 */
+	private void drawLabelsY(double startX, double startY) {
+
+		// Values to pick from
+		String letters[] = {"1", "2", "3", "4", "5", "6", "7", "8"}; 
+
+		// Draw 8 labels
+		for (int i=0; i<8; i++) {
+			// make a label with the current number
+			GLabel label = new GLabel(letters[i]);
+
+			// Where exactly do yo put it?
+			// construction analogous to drawLabelsX
+			double y = i * SCALING_FACTOR - (label.getHeight() / 2) + startY;
+			double x = startX - (label.getWidth() / 2);
+
+			// Draw label
+			add(label, x, y);
+		}
+	}
 
 	/**
 	 * Draws a rectangle.
@@ -23,18 +91,22 @@ public class Chessboard extends GraphicsProgram {
 		int width  = 1 * SCALING_FACTOR;
 		int height = 1 * SCALING_FACTOR;
 
-		int x = xCood * SCALING_FACTOR;
-		int y = yCood * SCALING_FACTOR;
+		int x = xCood * SCALING_FACTOR + BOARD_X_OFFSET;
+		int y = yCood * SCALING_FACTOR + BOARD_Y_OFFSET;
 
 		// Create the background rectanlge and draw it
-		GRect bgRect = new GRect(x, y, width, height);
+		GRect rect = new GRect(x, y, width, height);
 
-		bgRect.setColor(new Color(0.f, 0.f, 0.f, 0.4f));
-		bgRect.setFilled(true);
+		rect.setColor(     new Color(0.f, 0.f, 0.f));
+		rect.setFillColor( new Color(0.f, 0.f, 0.f, 0.3f));
+		rect.setFilled(true);
 
-		add(bgRect);
+		add(rect);
 	}
 
+	
+	// And down here comes the beautiful part of this program:
+	// the functionally explicit part.
 
 	/**
 	 * Draw a row of the Chessboard.
@@ -69,6 +141,7 @@ public class Chessboard extends GraphicsProgram {
 	public void run() {
 
 		drawBoard();
+		drawLabels();
 
 	}
 
