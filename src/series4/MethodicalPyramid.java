@@ -11,7 +11,7 @@ public class MethodicalPyramid extends GraphicsProgram {
 
 
 
-	private static final int SCALE_X = 20;
+	private static final int SCALE_X = 10;
 	private static final int SCALE_Y = 10;
 
 
@@ -51,55 +51,37 @@ public class MethodicalPyramid extends GraphicsProgram {
 	 */
 	public void drawLayer(int layerIndex, int numberOfLayers, Color layerColor) {
 
+		/* So here's an explanation of how this function works
+		 *
+		 */ 
 
 
-		/* Produce relevant values */
+		/* First produce necessary variables */
 
-		/*
-		 * The bottom layer contains as many blocks as there are layers,
-		 * because from layer to layer you remove 1 block each time.
-		 * layerIndex says (because of the given stacking of layers)
-		 * how many blocks you have to remove from the layer to get how
-		 * many blocks there still are in the layer.
-		 */
-		int numberOfBlocks = numberOfLayers - layerIndex;
-		println(numberOfBlocks);
-
-		// Works because we are counting from the bottom up
 		int startPosition  = layerIndex;
+		int numberOfBlocks = numberOfLayers - layerIndex;
 
-		int width  = 2;
-		int height = 1;
-		int y      = numberOfLayers - layerIndex - 1; // Just using layerIndex would draw the pyramid upside down; -1 because 0-indexing
-		int x      = startPosition; // The layer's first block starts at startPosition
-
-
-		print(x);
+		int y = numberOfLayers - layerIndex -1;
+		int x = 0;
 
 
+		/* Then draw the actual bricks of the wall */
 
-		/* I am truly impressed.
-		 * This problem is actually more understandably solved using your sentinel pattern.
-		 * Not many are.
-		 */
-		while (true) {
+		for (; x < (numberOfBlocks*2); x+=2) {
 
-			// Make and draw a Block
-			GRect block = new GRect(x * SCALE_X, y * SCALE_Y, 1 * SCALE_X, 1 * SCALE_Y);
+			// Make the current block
+			GRect block = new GRect(
+					(startPosition + x) * SCALE_X,	// Brick at position x + the row's offset
+					y * SCALE_Y,
+					2 * SCALE_X,	// Bricks are 2 units wide
+					1 * SCALE_Y);	// Bricks are 1 unit tall
+
+			// Style the current block
 			block.setFilled(true);
 			block.setFillColor(layerColor);
 
+			// Draw the current block
 			add(block);
-
-			// Repeat the drawing process until x becomes larger than numberOfBlocks
-			if (x <= numberOfBlocks) { x+=2; } else { break; }
-			// Note: once x == numberOfBlocks there will be one more repetition, so
-			// exactly numberOfBlocks blocks are drawn (we don't break directly, as
-			// we would with a regular for or while loop)
-
-			print(": ");
-			print(x);
-			print("\n");
 		}
 	}
 
@@ -109,21 +91,10 @@ public class MethodicalPyramid extends GraphicsProgram {
 		// Get the number of bricks for the bottom layer
 		int n = readInt("How many bricks u want? ");
 
+		// Draw a row of blocks for each number leading up to the number of bricks the user entered. =)
 		for (int i = 0; i < n; i++) {
 			drawLayer(i, n, layerColor(i, n));
 		}
-
-		/*
-		 *
-		 * position at how many blocks you deleted from the row and make each block two units by one unit
-		 *
-		 *
-		 * 
-		 *
-		 *
-		 */
-
-		println("Honk");
 
 	}
 
