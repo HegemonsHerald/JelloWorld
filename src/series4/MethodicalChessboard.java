@@ -92,21 +92,32 @@ public class MethodicalChessboard extends GraphicsProgram {
 	 */
 	public void drawPiece(int xCood, int yCood, int piece, int player) {
 
-		int x = xCood * SCALING_FACTOR + BOARD_X_OFFSET;
-		int y = yCood * SCALING_FACTOR + BOARD_Y_OFFSET;
-
+		// Possible letters
 		char[] whites = {'♙', '♘', '♗', '♖', '♕', '♔'}; // Racial undertones, yay
 		char[] blacks = {'♟', '♞', '♝', '♜', '♛', '♚'}; // Just to be clear: racism bad.
 
+		// Make a letter
 		GLabel letter;
 
-		if      (player == 0) { letter = new GLabel("" + whites[piece]); }
-		else if (player == 1) { letter = new GLabel("" + blacks[piece]); }
+		// Set the symbol
+		if      (player == 0) letter = new GLabel("" + whites[piece]);
+		else if (player == 1) letter = new GLabel("" + blacks[piece]);
 		else return;
 
-		letter.setFont("SansSerif-44");
+		letter.setFont("SansSerif-100");
 
-		add(letter, 33, 33);
+		// Set block-level position
+		// 7 - coordinate, cause for some reason the board is indexed upside down... damn you chess!
+		int x =  (7 - xCood)     * SCALING_FACTOR + BOARD_X_OFFSET;
+		int y = ((7 - yCood) +1) * SCALING_FACTOR + BOARD_Y_OFFSET; // yCood + 1 cause of the anchor position of GLabels
+
+		int blockDimension = SCALING_FACTOR; // how wide a chessboard block is
+
+		// Adjust for letter dimensions
+		x += (blockDimension - letter.getWidth())  / 2;
+		y += (blockDimension - letter.getHeight()) / 2;
+
+		add(letter, x, y);
 
 	}
 
@@ -114,6 +125,7 @@ public class MethodicalChessboard extends GraphicsProgram {
 	 * Draws a rectangle.
 	 * @param xCood	x coordiante of the rect's anchor
 	 * @param yCood	y coordiante of the rect's anchor
+	 * @param color	color for the rect
 	 */
 	public void drawSquare(int xCood, int yCood, Color color) {
 
@@ -172,7 +184,54 @@ public class MethodicalChessboard extends GraphicsProgram {
 
 		drawChessboard();
 		drawLabels();
-		drawPiece(2, 3, 0, 1);
+
+		/* I am wholly aware, I could have automated what follows, but... No. Just no.
+		 * If you are adept in Vim, this is done faster, then writing a loop.
+		 * And it's easier to understand.
+		 * Beat that.
+		 */
+
+		// First white row
+		drawPiece(0, 0, 3, 0);
+		drawPiece(1, 0, 1, 0);
+		drawPiece(2, 0, 2, 0);
+		drawPiece(3, 0, 5, 0);
+		drawPiece(4, 0, 4, 0);
+		drawPiece(5, 0, 2, 0);
+		drawPiece(6, 0, 1, 0);
+		drawPiece(7, 0, 3, 0);
+
+		// Second white row
+		drawPiece(0, 1, 0, 0);
+		drawPiece(1, 1, 0, 0);
+		drawPiece(2, 1, 0, 0);
+		drawPiece(3, 1, 0, 0);
+		drawPiece(4, 1, 0, 0);
+		drawPiece(5, 1, 0, 0);
+		drawPiece(6, 1, 0, 0);
+		drawPiece(7, 1, 0, 0);
+
+		// First black row
+		drawPiece(0, 7, 3, 1);
+		drawPiece(1, 7, 1, 1);
+		drawPiece(2, 7, 2, 1);
+		drawPiece(3, 7, 4, 1);
+		drawPiece(4, 7, 5, 1);
+		drawPiece(5, 7, 2, 1);
+		drawPiece(6, 7, 1, 1);
+		drawPiece(7, 7, 3, 1);
+
+		// Second black row
+		drawPiece(0, 6, 0, 1);
+		drawPiece(1, 6, 0, 1);
+		drawPiece(2, 6, 0, 1);
+		drawPiece(3, 6, 0, 1);
+		drawPiece(4, 6, 0, 1);
+		drawPiece(5, 6, 0, 1);
+		drawPiece(6, 6, 0, 1);
+		drawPiece(7, 6, 0, 1);
+
+
 
 	}
 
