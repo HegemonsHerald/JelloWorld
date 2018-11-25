@@ -35,15 +35,13 @@ public class MethodicalChessboard extends GraphicsProgram {
 	 */
 	private void drawLabelsX(double startX, double startY) {
 
-		// Values to go from
-		String letters[] = {"A", "B", "C", "D", "E", "F", "G", "H"};
-
 		// Draw 8 labels
 		for (int i=0; i<8; i++) {
-			// Make a label with the current letter
-			GLabel label = new GLabel(letters[i]);
 
-			// Where exactly do yo put it?
+			// Make a label with the current letter
+			GLabel label = new GLabel("" + (char) ('A'+i) );
+
+			// Where exactly do you put it?
 			// i*SCALING_FACTOR		= position of the field
 			// ... + startX			= position offset from borders
 			// ... - label.getWidth() / 2	= position of the label, centered
@@ -62,23 +60,54 @@ public class MethodicalChessboard extends GraphicsProgram {
 	 */
 	private void drawLabelsY(double startX, double startY) {
 
-		// Values to pick from
-		String letters[] = {"1", "2", "3", "4", "5", "6", "7", "8"}; 
-
 		// Draw 8 labels
-		for (int i=0; i<8; i++) {
+		for (int i=8; i>0; i--) {
 			// make a label with the current number
-			GLabel label = new GLabel(letters[i]);
+			GLabel label = new GLabel("" + i);
 
-			// Where exactly do yo put it?
+			// Where exactly do you put it?
 			// construction analogous to drawLabelsX
-			// (7-i) because 0-indexed letters and we want to have them back-to-front iterated.
-			double y = (7-i) * SCALING_FACTOR - (label.getHeight() / 2) + startY;
+			// (8-i) because we draw the numbers in decreasing order, but with increasing coordinates
+			double y = (8-i) * SCALING_FACTOR - (label.getHeight() / 2) + startY;
 			double x = startX - (label.getWidth() / 2);
 
 			// Draw label
 			add(label, x, y);
 		}
+	}
+
+	/**
+	 * Draws a specific chess {@code piece} of a {@code player} at the
+	 * position of a specific square identified by {@code x} and {@code y}.
+	 *
+	 * @param xCood
+	 *            file index, between 0 and 7.
+	 * @param yCood
+	 *            rank index, between 0 and 7.
+	 * @param piece
+	 *            0 for a pawn, 1 for a knight, 2 for a bishop, 3 for a
+	 *            rook, 4 for a queen, 5 for a king.
+	 * @param player
+	 *            0 for white, 1 for black.
+	 */
+	public void drawPiece(int xCood, int yCood, int piece, int player) {
+
+		int x = xCood * SCALING_FACTOR + BOARD_X_OFFSET;
+		int y = yCood * SCALING_FACTOR + BOARD_Y_OFFSET;
+
+		char[] whites = {'♙', '♘', '♗', '♖', '♕', '♔'}; // Racial undertones, yay
+		char[] blacks = {'♟', '♞', '♝', '♜', '♛', '♚'}; // Just to be clear: racism bad.
+
+		GLabel letter;
+
+		if      (player == 0) { letter = new GLabel("" + whites[piece]); }
+		else if (player == 1) { letter = new GLabel("" + blacks[piece]); }
+		else return;
+
+		letter.setFont("SansSerif-44");
+
+		add(letter, 33, 33);
+
 	}
 
 	/**
@@ -143,6 +172,7 @@ public class MethodicalChessboard extends GraphicsProgram {
 
 		drawChessboard();
 		drawLabels();
+		drawPiece(2, 3, 0, 1);
 
 	}
 
