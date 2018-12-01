@@ -32,6 +32,10 @@ public class MethodicalPyramid extends GraphicsProgram {
 		// If the layer index ain't valid, don't do no more shit
 		if (layerIndex < 0 || layerIndex >= numberOfLayers) {
 			return null;
+
+		// If the number of layers is like small, you use just red.
+		} else if (numberOfLayers < 2) {
+			return new Color(255, 0, 0);
 		}
 
 		// This has to be a float to make sure we get decimal places, without having to count remainders...
