@@ -41,7 +41,7 @@ public class Mandelbrot extends GraphicsProgram {
 
 				/* Decide whether Mandelbrot sequence approaches infinity */
 
-				boolean isInSet = true;
+				boolean isInSet = false;
 
 				// Element to start with and always the previous element
 				ComplexNumber z = new ComplexNumber();
@@ -62,7 +62,7 @@ public class Mandelbrot extends GraphicsProgram {
 					if (checker > 4) {
 						isInSet = false;
 						break;
-					}
+					} else  isInSet = true;
 
 					// Set the new previous element
 					z = zNext;
