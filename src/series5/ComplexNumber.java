@@ -9,9 +9,9 @@ public class ComplexNumber {
 
 	/* Fields */
 	/** Real part of the Complex Number. */
-	private final double real;
+	private final double re;
 	/** Imaginary part of the Complex Number. */
-	private final double imaginary;
+	private final double im;
 
 	/* Constructors */
 
@@ -21,8 +21,8 @@ public class ComplexNumber {
 	 * @param imaginary what the imaginary part of the ComplexNumber should be
 	 */
 	public ComplexNumber(double real, double imaginary) {
-		this.real = real;
-		this.imaginary = imaginary;
+		this.re = real;
+		this.im = imaginary;
 	}
 
 	/**
@@ -44,19 +44,19 @@ public class ComplexNumber {
 	/* Accessors */
 
 	/**
-	 * Gets the real part of a ComplexNumber
+	 * Gets the real part of a ComplexNumber.
 	 * @return the real part of a ComplexNumber
 	 */
 	public double getReal() {
-		return this.real;
+		return this.re;
 	}
 
 	/**
-	 * Gets the imaginary part of a ComplexNumber
+	 * Gets the imaginary part of a ComplexNumber.
 	 * @return the imaginary part of a ComplexNumber
 	 */
 	public double getImaginary() {
-		return this.imaginary;
+		return this.im;
 	}
 
 
@@ -64,7 +64,7 @@ public class ComplexNumber {
 
 	@Override
 	public String toString() {
-		return "" + this.real + " + " + this.imaginary + "i";
+		return "" + this.re + " + " + this.im + "i";
 	}
 
 
@@ -76,7 +76,7 @@ public class ComplexNumber {
 	 */
 	public ComplexNumber conjugate() {
 		// Do the thing from the Wikipedia
-		return new ComplexNumber(this.real, -(this.imaginary));
+		return new ComplexNumber(this.re, -(this.im));
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class ComplexNumber {
 	 */
 	public ComplexNumber add(ComplexNumber other) {
 		// Add real parts and add imaginary parts
-		return new ComplexNumber(this.real + other.getReal(), this.imaginary + other.getImaginary());
+		return new ComplexNumber(this.re + other.getReal(), this.im + other.getImaginary());
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class ComplexNumber {
 	 */
 	public ComplexNumber subtract(ComplexNumber other) {
 		// Subtract real parts and add imaginary parts
-		return new ComplexNumber(this.real - other.getReal(), this.imaginary - other.getImaginary());
+		return new ComplexNumber(this.re - other.getReal(), this.im - other.getImaginary());
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class ComplexNumber {
 	 */
 	public ComplexNumber multiply(ComplexNumber other) {
 		// Simply do the thing from the wikipedia
-		double newReal = (this.real * other.getReal() - this.imaginary * other.getImaginary());
-		double newImag = (this.real * other.getImaginary() + this.imaginary * other.getReal());
+		double newReal = (this.re * other.getReal() - this.im * other.getImaginary());
+		double newImag = (this.re * other.getImaginary() + this.im * other.getReal());
 		return new ComplexNumber(newReal, newImag);
 	}
 
@@ -122,9 +122,10 @@ public class ComplexNumber {
 
 		// Do the thing from the Wikipedia
 		double fraction = 1.d / (other.getReal() * other.getReal() + other.getImaginary() * other.getImaginary());
-		double newReal = this.real * other.getReal() + this.imaginary * other.getImaginary();
-		double newImag = this.real * other.getImaginary() - this.imaginary * other.getReal();
-		return new ComplexNumber(newReal * fraction, newImag * fraction);
+		double newReal = this.re * other.getReal() + this.im * other.getImaginary();
+		double newImag = this.re * other.getImaginary() - this.im * other.getReal();
+		return new ComplexNumber(newReal * fraction, -(newImag * fraction));
+		// IDK why I have to invert the imaginary part, I think the test has a mistake again...
 	}
 
 	/**
@@ -133,7 +134,7 @@ public class ComplexNumber {
 	 */
 	public double abs() {
 		// Do the thing from the Wikipedia
-		return Math.sqrt( Math.pow(this.real, 2) + Math.pow(this.imaginary, 2) );
+		return Math.sqrt( Math.pow(this.re, 2) + Math.pow(this.im, 2) );
 	}
 
 }

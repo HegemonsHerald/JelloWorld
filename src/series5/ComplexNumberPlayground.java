@@ -11,6 +11,8 @@ public class ComplexNumberPlayground {
 		ComplexNumber cn2 = new ComplexNumber(1.35, 38945.33);
 		ComplexNumber cn3 = new ComplexNumber(cn2);
 		ComplexNumber cn4 = new ComplexNumber(42.3, 9.0);
+		ComplexNumber cn5 = new ComplexNumber(0.5, 2.3);
+		ComplexNumber cn6 = new ComplexNumber(1.3, 4.1);
 
 		// Basic methods
 		System.out.println(cn2);		// toString
@@ -32,6 +34,8 @@ public class ComplexNumberPlayground {
 		System.out.println(cn2Div);
 		System.out.println(cn2Abs);
 		System.out.println(cn2.divide(cn1));
+
+		System.out.println(cn5.divide(cn6));
 
 	}
 
