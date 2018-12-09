@@ -1,5 +1,7 @@
 package series6;
 
+// package programming.set6.optimus;
+
 import acm.program.ConsoleProgram;
 
 /**
@@ -7,7 +9,7 @@ import acm.program.ConsoleProgram;
  */
 public class SieveOfEratosthenes extends ConsoleProgram {
 
-	/** Checks whether a number is a prime or not
+	/** Checks whether a number is a prime or not.
 	 * @param a a number to check for primety
 	 * @return whether it's a prime or not
 	 */
@@ -18,7 +20,7 @@ public class SieveOfEratosthenes extends ConsoleProgram {
 		return true;
 	}
 
-	// @Override
+	@Override
 	public void run() {
 
 		/* Get Input */
