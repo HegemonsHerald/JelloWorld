@@ -58,3 +58,20 @@ public class DateTestground {
 	}
 
 }
+
+/*
+ *
+ * in substitute:
+ *   \=VARNAME
+ * to use variables
+ *
+ * vimscript
+ *   setline(number, text)	sets line number number to be text
+ *   append(number, lines)	appends lines after line number
+ *   line(".")			gets current line number
+ *   getline(number)		gets line from buffer
+ *   paste option
+ *
+ *   exec "norm ..." allows you to use escape characters while
+ *   calling up :norm, see :h expr-quote for a list of valid escapes
+ */
