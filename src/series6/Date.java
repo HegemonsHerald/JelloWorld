@@ -1,6 +1,6 @@
 package series6;
 
-//package programming.set6.date;
+// package programming.set6.date;
 
 /**
  * Date. Yup.
@@ -36,11 +36,10 @@ public class Date {
 		return day;
 	}
 
-	/** Is a year a leap year?
+	/** Is a year a leap year.?
 	 * @param year the year to test
 	 * @return true if the year is a leap year
 	 */
-	//private static boolean isLeapYear(int year) {
 	public static boolean isLeapYear(int year) {
 
 		/* A year is a leap year if it is divisible by 4
@@ -75,7 +74,6 @@ public class Date {
 	 * @param year year.
 	 * @param month month.
 	 * @param day day.
-	 * @return a Date.
 	 */
 	public Date(int year, int month, int day) {
 
@@ -125,24 +123,46 @@ public class Date {
 	}
 
 	/** Returns the absolute day count of the date, in reference to 365/366 days in a whole year.
-	 * @return
+	 * @return the day of the year
 	 */
 	public int dayOfYear() {
-		return 0;
+
+		int monthDays = 0;
+
+		// Add up the days in the months before the current month
+		for (int month = 0; month < this.month-1; month++) {
+
+			monthDays += getDaysInMonth(this.year, month);
+
+		}
+
+		// The day of the year were at, is the number of days in the preceding months + the number of days we're into the current month!
+		return monthDays + this.day;
+
 	}
 
 	/** Returns the difference between two dates, provided both are in the same year.
 	 * If the dates aren't in the same year the method returns 0.
-	 * @param other
-	 * @return
+	 * @param other the others are evil
+	 * @return yo, read the description
 	 */
 	public int sameYearDiff(Date other) {
-		return 0;
+
+		// Edge case
+		if (this.year != other.getYear()) return 0;
+
+		// Get dates
+		int day1 = this.dayOfYear();
+		int day2 = other.dayOfYear();
+
+		// Well, duh
+		return day2 - day1;
+
 	}
 
 	@Override
 	public String toString() {
-		return MONTHS[this.month + 1] + " " + this.day + ", " + this.year;
+		return MONTHS[this.month - 1] + " " + this.day + ", " + this.year;
 	}
 
 }

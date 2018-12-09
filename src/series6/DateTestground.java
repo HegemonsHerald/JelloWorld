@@ -14,10 +14,12 @@ public class DateTestground {
 		Date d2 = new Date(2016, 12, 15);
 		Date d3 = new Date(2016, 1, 24);
 		Date d4 = new Date(12, 1, 24);
+		Date d5 = new Date(2008, 1, 4);
 
 		// check toString
 		System.out.println("check println");
 		System.out.println(d1);
+		System.out.println(d5);
 		System.out.println();
 
 		// check for leap years
