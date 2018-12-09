@@ -1,10 +1,11 @@
-// import acm.program.ConsoleProgram;
+package series6;
+
+import acm.program.ConsoleProgram;
 
 /**
  * Was is Sieben mal Sieben? Feiner Sand.
  */
-// public class SieveOfEratosthenes extends ConsoleProgram {
-public class SieveOfEratosthenes {
+public class SieveOfEratosthenes extends ConsoleProgram {
 
 	/** Checks whether a number is a prime or not
 	 * @param a a number to check for primety
@@ -22,12 +23,11 @@ public class SieveOfEratosthenes {
 
 		/* Get Input */
 
+		int n = 0;
+
 		do {
 			n = readInt("Give me an Integer that's larger or at least equal to 2: ");
 		} while (n < 2);
-
-		n = 20;
-
 
 		/* Init Computation Array */
 
