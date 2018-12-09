@@ -18,19 +18,13 @@ public class SieveOfEratosthenes {
 	}
 
 	// @Override
-	// public void run() {
-	public static void main(String args[]) {
+	public void run() {
 
 		/* Get Input */
 
-		System.out.println("Give me an Integer that's larger or at least equal to 2: ");
-		int n = 0;
-
-		/*
-		   do {
-		   n = readInt("Give me an Integer that's larger or at least equal to 2: ");
-		   } while (n < 2);
-		   */
+		do {
+			n = readInt("Give me an Integer that's larger or at least equal to 2: ");
+		} while (n < 2);
 
 		n = 20;
 
@@ -61,7 +55,7 @@ public class SieveOfEratosthenes {
 			else if (isPrime(a)) {
 
 				// ... output it...
-				System.out.println(a);
+				println(a);
 
 				// ... set all multiples of the number to 0...
 				for (int j = 1; j*a < numbers.length; j++) {
@@ -71,10 +65,7 @@ public class SieveOfEratosthenes {
 				// ... else there's nothing to do
 			} else continue;
 
-
 		}
 
-
-
 	}
-	}
+}
