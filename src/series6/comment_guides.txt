@@ -1,0 +1,17 @@
+
+
+
+/** Description.
+ * stuff.
+ */
+
+// One liner, always above the thing
+
+/*
+ * explanation
+ * somewhere
+ */
+
+/* Section Headline */
+
+/// rust doc
