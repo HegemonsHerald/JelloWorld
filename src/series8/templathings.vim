@@ -893,15 +893,19 @@ endfunc
 " JavaDoc Maker
 " =============
 
-" In jdoc-prompts you can use '\ ' or '\n' to denote a line-break
-let s:JdocNewlinePattern = '\(\\ \)\|\(\\n\)'
-
 " General Regex patterns
-" I use these to make matching against types and names a little more readable
+
+" In jdoc-prompts you can use '\ ' or '\n' to denote a line-break
+let s:r_newlinePattern = '\(\\ \)\|\(\\n\)'
+
 let s:r_arrayBrackets = '\[\=\]\='
 let s:r_word = '\<\w\+\>'
 let s:r_type = s:r_word.s:r_arrayBrackets " the array-denoting '[]' could be after the type...
 let s:r_name = s:r_word.s:r_arrayBrackets " ... or after the name
+
+let s:r_classKeywordPattern = '\(interface\|class\|enum\)'
+let s:r_constKeywordPattern = 'static\s\+final'
+let s:r_excepKeywordPattern = '\s*throw\s\+\(new\s\+\)\='
 
 
 " Creates JavaDocs for whatever thing the cursor is on, provided the cursor is
@@ -949,6 +953,11 @@ func! Jdoc()
 
 		let str = JdocGenMethod()
 
+	" -1 = none of the above
+	elseif lineType == -1
+
+		return
+
 	endif
 
 	call JdocAddComment(str)
@@ -987,8 +996,8 @@ func! JdocLineType()
 	let rName = s:r_name
 
 	" The regex patterns to check against
-	let pattClass  = '\(class\)\|\(interface\)'
-	let pattConst  = 'static final'
+	let pattClass  = s:r_classKeywordPattern
+	let pattConst  = s:r_constKeywordPattern
 	let pattMethod = '.*'.rType.'\s\+'.rName.'\s*(.*)\s*{' " match two words, parens with maybe sth in them and a {
 
 	" Note, that the pattMethod also matches constructors, clever, eh?
@@ -1031,7 +1040,7 @@ func! JdocLineType()
 
 endfunc
 
-" Generates Jdocs for a class or interface declaration.
+" Generates Jdocs for a class, enum or interface declaration.
 "
 " The function returns a list of lines, that can be added to the file with
 " AddLines()
@@ -1040,36 +1049,24 @@ func! JdocGenClass()
 	" Get data
 
 	let line = getline('.')
-	let newlinePattern = s:JdocNewlinePattern
+	let newlinePattern = s:r_newlinePattern
+	let keywordPattern = s:r_classKeywordPattern
 	let rWord = s:r_word
 
-	let name = substitute(line, '.*'.'\(interface\|class\)'.'\s\+'. '\(' . rWord . '\)' .'.*', '\2', '')
+	let name = substitute(line, '.*'.keywordPattern.'\s\+'. '\(' . rWord . '\)' .'.*', '\2', '')
 
 
 	" Figure out Generics
 	" -------------------
 
 	" Get generic parameters
-	let genericParameters = substitute(line, '.*'.'\(class\|interface\)'.'\s\+'.rWord . '\(\s*<' . '\(.*\)' . '>\)\=' .'\s*'.'{', '\3', '')
+	let genericParameters = substitute(line, '.*'.keywordPattern.'\s\+'.rWord . '\(\s*<' . '\(.*\)' . '>\)\=' .'\s*'.'{', '\3', '')
 
 	" Get rid of any spaces among the parameters
 	let genericParameters = substitute(trim(genericParameters), ' ', '', '')
 
 	" Separate into just parameters
 	let genericParameters = split(genericParameters, ',')
-
-
-	" Class or Interface?
-	" -------------------
-	" type = 0 means class
-	" type = 1 means interface
-
-	let type = 0
-
-	if match([line], 'interface') == 0
-		let type = 1
-	endif
-
 
 
 	" Let's make a token dictionairy, shall we?
@@ -1086,7 +1083,7 @@ func! JdocGenClass()
 	" Get just the stuff after the class/interface keyword and before the {
 	" The weird pattern after the rWord is a match for an optional
 	" declaration of generic types
-	let promptLine  = substitute(line, '.*'.'\(class\|interface\)'.'\s\+'. '\(' . rWord.'\(\s*<.*>\)\=' . '\)' .'\s*'.'{', '\2', '')
+	let promptLine  = substitute(line, '.*'.keywordPattern.'\s\+'. '\(' . rWord.'\(\s*<.*>\)\=' . '\)' .'\s*'.'{', '\2', '')
 	let promptLine  = trim(promptLine)
 	let tokenString = '   %n: '.name
 
@@ -1186,13 +1183,14 @@ func! JdocGenMethod()
 	let line = trim(getline(line('.')))
 
 	" \n and \  are allowed for newline
-	let newlinePattern = s:JdocNewlinePattern
+	let newlinePattern = s:r_newlinePattern
 
 	let rWord = s:r_word
 	let rType = s:r_type
 	let rName = s:r_name
+	let rExcPattern = s:r_excepKeywordPattern
 
-	let exceptPattern = '\s*throw\s\+\(new\s\+\)\='.rWord
+	let exceptPattern = rExcPattern.rWord
 	" Regex: match against...
 	"   at least some whitespace
 	"   'throw'
@@ -1257,7 +1255,7 @@ func! JdocGenMethod()
 		"   /* .* throw		beginning of multi-line comment somewhere before the 'throw'
 
 			" Get just the exception's name
-			let e = substitute(e, '^.*throw\s\+\(new\s\+\)\=\(\<\w\+\>\)', '\2', '')
+			let e = substitute(e, '^'.rExcPattern.'\(\<\w\+\>\)', '\2', '')
 			" Regex: match against...
 			"   anything, til you find
 			"   'throw'
@@ -1506,10 +1504,10 @@ func! JdocGenConst()
 
 	" Get data
 	let line = getline('.')
-	let newlinePattern = s:JdocNewlinePattern
+	let newlinePattern = s:r_newlinePattern
 
 	" Get the regex types
-	let rStatFinal = 'static\s\+final'
+	let rStatFinal = s:r_constKeywordPattern
 	let rType = s:r_type
 	let rName = s:r_name
 
@@ -1659,7 +1657,7 @@ func! JdocCombineTagDescription(tag, desc, indent)
 	let indent = a:indent
 
 	" Split the description into lines
-	let newlinePattern = s:JdocNewlinePattern
+	let newlinePattern = s:r_newlinePattern
 	let desc = split(a:desc, newlinePattern)
 
 	" Adjust indentation length of the tag
