@@ -69,6 +69,78 @@ source ./templathings_main.vim
 " is jpsfac = java private static final array constructor
 "
 
+
+" Templates
+" =========
+
+" Makes a basic java class with package and main() method.
+" The package is simply the name of the folder the file's in.
+func! JavaTemplateGeneral()
+
+	let filename	= expand('%:p:t:r')
+	let dirname	= expand('%:p:h:t')
+	let package	= 'package '.dirname.';'
+	let class	= 'public class '.filename.' {'
+	let main	= 'public static void main(String args[]) {'
+
+	let lines = [ package, '', class, '', main, '', '', '}', '', '}' ]
+
+	call AddLines(lines)
+
+	norm 5jo░
+	norm x
+
+	startinsert!
+
+endfunc
+
+" Creates a basic ACM ConsoleProgram
+func! JavaTemplateACMConsole()
+
+	let filename	= expand('%:p:t:r')
+	let dirname	= expand('%:p:h:t')
+	let package	= 'package '.dirname.';'
+	let import	= 'import acm.program.ConsoleProgram;'
+	let class	= 'public class '.filename.' extends ConsoleProgram {'
+	let main	= 'public void run() {'
+
+	let lines = [ package, '', import, '', class, '', main, '', '', '}', '', '}' ]
+
+	call AddLines(lines)
+
+	norm 7jo░
+	norm x
+
+	startinsert!
+
+endfunc
+
+" Creates a basic ACM GraphicsProgram
+func! JavaTemplateACMGraphics()
+
+	let filename	= expand('%:p:t:r')
+	let dirname	= expand('%:p:h:t')
+	let package	= 'package '.dirname.';'
+	let import1	= 'import acm.program.GraphicsProgram;'
+	let import2	= 'import acm.graphics.*;'
+	let class	= 'public class '.filename.' extends ConsoleProgram {'
+	let main	= 'public void run() {'
+
+	let lines = [ package, '', import1, import2, '', class, '', main, '', '', '}', '', '}' ]
+
+	call AddLines(lines)
+
+	norm 8jo░
+	norm x
+
+	startinsert!
+
+endfunc
+
+
+" Mappings
+" ========
+
 " All of these are leader commands now, cause otherwise stuff
 " like jo interferes with words like join, and that we can't have!
 
@@ -154,15 +226,19 @@ autocmd FileType java inoremap <buffer> Jelif <Esc>:call <SID>ElseIfOneline()<Cr
 autocmd FileType java inoremap <buffer> Jelse <Esc>:call <SID>ElseOneline()<Cr>
 
 " switch statement
+" ...
+
+" javadocs
+autocmd FileType java nnoremap <buffer> <leader>jdoc :call Jdoc()<Cr>
 
 
-
-
-" Impl
+" IMPL
+" ====
 
 
 
 " Constructors
+" ============
 
 " Constant Constructor
 func! s:ConCon(visibility)
@@ -203,6 +279,7 @@ endfunc
 
 
 " Literals
+" ========
 
 " Constant Literal
 func! s:ConLit(visibility)
@@ -231,7 +308,6 @@ func! s:ConListCon(visibility)
 	call s:ListCon(0, 0)
 endfunc
 
-
 " Object Literal
 func! s:ObjLit(visibility, upper)
 	call s:Visibility(a:visibility)
@@ -245,8 +321,8 @@ func! s:ArrLit(visibility, upper)
 endfunc
 
 
-
 " Actual Maker Functions
+" ======================
 
 " Object Constructor Constructor
 " to construct object vars with constructor calls and arrays with array-constructor calls
@@ -387,8 +463,7 @@ endfunc
 
 
 " Control Flow Makers
-
-" Loops
+" ===================
 
 " for loop with most things filled in
 func! s:ForBasic()
@@ -722,7 +797,6 @@ func! s:DoWhileAdvanced()
 
 endfunc
 
-
 " make an if block
 "
 " if you don't provide an expression, you start insert mode within the parens
@@ -816,157 +890,26 @@ endfunc
 
 
 
-" JavaDoc Commentary
-" MAKE THESE PUBLIC, THAT IS NOT SCRIPT-LOCAL!!!
+" JavaDoc Maker
+" =============
 
-" javadoc with prompts and alternate defaults
-"  checks what the cursor's in
-"  calls appropriate constructor
+" In jdoc-prompts you can use '\ ' or '\n' to denote a line-break
+let s:JdocNewlinePattern = '\(\\ \)\|\(\\n\)'
+
+" General Regex patterns
+" I use these to make matching against types and names a little more readable
+let s:r_arrayBrackets = '\[\=\]\='
+let s:r_word = '\<\w\+\>'
+let s:r_type = s:r_word.s:r_arrayBrackets " the array-denoting '[]' could be after the type...
+let s:r_name = s:r_word.s:r_arrayBrackets " ... or after the name
+
+
+" Creates JavaDocs for whatever thing the cursor is on, provided the cursor is
+" on one of the following:
+"   - a method declaration
+"   - a class or interface declaration
+"   - a static final
 "
-" javadoc constructors
-"  class/interface
-"  methods
-"  fields -> oneliners
-"
-" javadoc all
-"  goes through classes (also local classes, interfaces)
-"  goes through static finals
-"  goes through methods
-"
-" javadoc prompt
-"  prompts for description and tags (by spec)
-"   has reference output
-"    line 1 is the method signature or class or thing or whatev
-"    following lines are the tags and their values in the specific context
-"  substitutes tokens with syntax elements of jdoc
-"   %PN {@code Nth-parameter
-"   %P	{@code current parameter
-"   %R	{@code return
-"   %{  {@code
-"   %pN Nth-parameter of function -> prompt takes param list
-"   %p  current parameter of function or first, if this is description/return
-"   %r  return
-"   %n	method name
-"   %t  method type
-"
-"   %xN Nth-exception type
-"   %x	current exception type
-"
-"  note on impl: for uppercase %tokens have a subst iteration, that just
-"    replaces these with the lowercase equivs, then have another iteration
-"    that replaces those, so you have less duplicate data-structure
-"  uses %m and %p and %t (for return type) as defaults for empty prompts
-"  adds periods to line-ends, if the user didn't
-"
-"
-" javadoc all full
-"  goes through classes (also local classes, interfaces)
-"  goes through static finals
-"  goes through fields
-"  goes through methods
-
-
-" javadoc with prompt and defaults
-" javadoc shorthand (no prompt, just defaults)
-" genAllJavaDocsPrompt
-" genAllJavaDocsDefault
-
-" generate for methods, the class (also classes in general), constants (?)
-
-" make jdoc for the thing the cursor's over / in
-" and prompt by default -> then have it include stuff for methods, constants,
-" interfaces etc. (everything in and around the class, that is code-ish)...
-
-" the generate full javadocs function then can go through the things in
-" logical order, not linear -> then I just have to loop over various search
-" terms, not figure out how to actually do the thing linearly!
-
-
-" returns -1 if the cursor is on a commented line
-" returns 1 if the cursor is on a static final (the only one-liner statement,
-" that gets commentary), 2 if it's on a signature line (class or method
-" declaration), 0 otherwise
-func! s:LineType()
-
-	let line = getline(line('.'))
-
-	" If the current line has a commenting character at the beginning...
-	if match([line], '^\s*//') == 0 || match([line], '^\s*/\*') == 0 || match([line], '^\s*\*.*') == 0
-		return -1
-	endif
-
-	" ... if the line is a static final...
-	if match([line], 'static final') == 0
-		return 1
-
-	" ... else if the line is a class, interface, method or constructor declaration...
-	elseif match([line], '\(class\)\|\(interface\)') == 0 || match([line], '\(public \+\|private \+\)\=\(static \+\)\=\(\<\w\+\> \+\)\(\<\w\+\> *\)(.*)') == 0 || match([line], 'public \<\w\+\> *(.*)') == 0
-
-		" Note: I split the method and constructor checks, because if I use a more
-		" generalized regex for methods of all kinds, I'd also match against control-flow statements...
-
-		" How those regexes work...
-		" =========================
-		"
-		" reminder:
-		"   \( ... \)   defines an atom in the pattern
-		"   \|          is the logical or between atoms
-		"   \=          matches the preceeding atom 0 or 1 time greedily, same as \?
-		"   \+          matches the preceeding atom 1 or more times, greedily
-		"
-		" matches either the atom 'class' or the atom 'interface'
-		"   \( class \)  \|  \( interface \)
-		"
-		" this thing (matches against a method):
-		" \(public \+\|private \+\)\=\(static \+\)\=\(\<\w\+\> \+\)\(\<\w\+\> *\)(.*)
-		"
-		" matches in order:
-		"   optionally either 'public' or 'private', optionally followed by spaces
-		"   optionally 'static', optionally followed by spaces
-		"   match a word, optionally followed by spaces ... that's the return type
-		"   match a word, optionally followed by spaces ... that's the name
-		"   match parenthesis with any number of characters between them
-		"
-		" is made of these smaller parts:
-		"   sth \+      match 'sth' followed by at least one space
-		"   sth\|else   match 'sth' or 'else'
-		"   a\=         match 'a' 0 or 1 times
-		"   \(honk\)\=  match 'honk' 0 or 1 times
-		"   \<\w\+\>    match the beginning of a word, then at least one word character, then the end of a word -> matches a word of at least one character length
-		"
-		" this thing:
-		" public \(\<\w\+\> *(.*)
-		" matches against 'public', followed by a word, followed by parens with anything in them... so it matches a constructor
-		"
-
-		return 2
-
-	endif
-
-	return 0
-
-endfunc
-
-" if the line above line_number contains Jdocs, this function returns 1, else 0
-func! JdocExists(line_number)
-
-	" Get the line above the current line...
-	let line = getline(a:line_number-1)
-
-	" ... and check it for javadocs
-	" regex: either the beginning of a jdoc, or whitespace followed by an asterisk followed by anything, which is the middle of a comment, or match against '*/', which is a comment's end...
-	if match([line], '/\*\*') == 0 || match([line], '^\s*\*.*') == 0 || match([line], '.*\*/') == 0
-		return 1
-	endif
-
-	" If there's no javadoc
-	return 0
-
-endfunc
-
-
-
-" Creates JavaDocs for whatever thing the cursor is on or in
 " note: this function assumes, that you put the '{' one the same line as eg the method signature and not below!
 func! Jdoc()
 
@@ -1012,10 +955,29 @@ func! Jdoc()
 
 endfunc
 
-" returns 0 if the current line is a class or interface declaration
-"	  1 if the current line is a 'static final'-constant
-"	  2 if the current line is a method declaration
-"	 -1 if the current line isn't any of the above
+" If the line above line_number contains Jdocs, this function returns 1, else 0
+func! JdocExists(line_number)
+
+	" Get the line above the current line...
+	let line = getline(a:line_number-1)
+
+	" ... and check it for javadocs
+	" regex: either the beginning of a jdoc, or whitespace followed by an asterisk followed by anything, which is the middle of a comment, or match against '*/', which is a comment's end...
+	if match([line], '/\*\*') == 0 || match([line], '^\s*\*.*') == 0 || match([line], '.*\*/') == 0
+		return 1
+	endif
+
+	" If there's no javadoc
+	return 0
+
+endfunc
+
+" Figures out, which of the jdoc-able line-types the current line is.
+"
+" returns -1	on a commented line
+" returns  0	on a class or interface declaration
+" returns  1	on a static final (the only one-liner statement, that gets commentary)
+" returns  2	on a method signature
 func! JdocLineType()
 
 	let line = getline(line('.'))
@@ -1069,12 +1031,11 @@ func! JdocLineType()
 
 endfunc
 
-" Returns a list of strings, that represent a jdoc for a class or interface declaration
+" Generates Jdocs for a class or interface declaration.
+"
+" The function returns a list of lines, that can be added to the file with
+" AddLines()
 func! JdocGenClass()
-
-	" public class name<Types> {
-	" private class name {
-	" interface lksdjf {
 
 	" Get data
 
@@ -1085,7 +1046,21 @@ func! JdocGenClass()
 	let name = substitute(line, '.*'.'\(interface\|class\)'.'\s\+'. '\(' . rWord . '\)' .'.*', '\2', '')
 
 
+	" Figure out Generics
+	" -------------------
+
+	" Get generic parameters
+	let genericParameters = substitute(line, '.*'.'\(class\|interface\)'.'\s\+'.rWord . '\(\s*<' . '\(.*\)' . '>\)\=' .'\s*'.'{', '\3', '')
+
+	" Get rid of any spaces among the parameters
+	let genericParameters = substitute(trim(genericParameters), ' ', '', '')
+
+	" Separate into just parameters
+	let genericParameters = split(genericParameters, ',')
+
+
 	" Class or Interface?
+	" -------------------
 	" type = 0 means class
 	" type = 1 means interface
 
@@ -1096,9 +1071,17 @@ func! JdocGenClass()
 	endif
 
 
-	" Let's make a token dictionairy, shall we?
-	let substDict = { '%n': name, '%{': '{@code' }
 
+	" Let's make a token dictionairy, shall we?
+	" And then let's prompt, eh?
+	" -----------------------------------------
+
+	let substDict = { '%n': name, '%{': '{@code', '%P': '@param' }
+
+	" Dynamic Generic Type Parameter Tokens
+	for i in range(len(genericParameters))
+		let substDict['%p'.i] = genericParameters[i]
+	endfor
 
 	" Get just the stuff after the class/interface keyword and before the {
 	" The weird pattern after the rWord is a match for an optional
@@ -1107,10 +1090,18 @@ func! JdocGenClass()
 	let promptLine  = trim(promptLine)
 	let tokenString = '   %n: '.name
 
+	" Add the dynamic tokens for Generic Type Parameters
+	for i in range(len(genericParameters))
+		let tokenString = tokenString.', %p'.i.': '.genericParameters[i]
+	endfor
+
 
 	" Helping Output
 	echo promptLine
 	echo tokenString
+
+
+	" Handle description prompt
 
 	" Prompt for the description
 	let desc = JdocInput('', name)
@@ -1125,187 +1116,63 @@ func! JdocGenClass()
 	let desc[0] = JdocCapitalAndPeriod(desc[0])
 
 
-	" Create the final comment
+	" Possibly prompt for generic types
 
-	" If the comment is a multiline...
-	if len(desc) > 1
+	let genericParamsTags = []
+	let genericParamsDesc = []
+
+	if len(genericParameters) > 0
+
+		" Get arguments descriptions and argument tags
+		for i in range(len(genericParameters))
+			let genericParamsTags = genericParamsTags + ['@param '.genericParameters[i]]
+			let genericParamsDesc = genericParamsDesc + [JdocInput(genericParamsTags[i].' ', 'A value for '.genericParameters[i])]
+		endfor
+
+	endif
+
+
+	" Create the final comment
+	" ------------------------
+
+	let lenDesc = len(desc)
+	let lenGen  = len(genericParameters)
+
+	" If there are multiple description lines or at least one generic
+	" parameter it must be a multi-line comment...
+	if lenDesc > 1 || lenGen > 0
 
 		" ... start making a comment...
 		let comment = ['/**']
 
-		" ... add all the lines...
+		" ... add all the lines of the description...
 		for line in desc
 			let comment = comment + [' * '.line]
 		endfor
+
+		" ... add the possibly existing generic parameter tags
+		let comment = comment + JdocBuildTagsDescs(genericParamsTags, genericParamsDesc)
 
 		" ... and add a comment-closer
 		let comment = comment + [' */']
 
 
-	" ... Else it must be a single line...
-	else
-		" ... so make a single line javadoc!
+	" ... It's a single-line comment if there's only one line to add...
+	elseif lenDesc == 1 && lenGen == 0
+		" ... so make a single-line javadoc!
 		let comment = ['/** '.desc[0].' */']
 	endif
 
-	return comment
-
-
-
-endfunc
-
-let s:JdocNewlinePattern = '\(\\ \)\|\(\\n\)'
-
-" General Regex patterns
-" I use these to make matching against types and names a little more readable
-let s:r_arrayBrackets = '\[\=\]\='
-let s:r_word = '\<\w\+\>'
-let s:r_type = s:r_word.s:r_arrayBrackets " the array-denoting '[]' could be after the type...
-let s:r_name = s:r_word.s:r_arrayBrackets " ... or after the name
-
-" Returns a list of strings, that represent a jdoc for a 'static final'-type constant declaration
-" By default the comment will be a one-liner.
-func! JdocGenConst()
-
-	" Get data
-	let line = getline('.')
-	let newlinePattern = s:JdocNewlinePattern
-
-	" Get the regex types
-	let rStatFinal = 'static\s\+final'
-	let rType = s:r_type
-	let rName = s:r_name
-
-
-	" Let's make a token dictionairy, shall we?
-
-	let type = substitute(line, '.*'.rStatFinal.'\s\+'.'\('.rType.'\)'.'\s\+'     .rName.     '\s\+'.'=.*', '\1', '')
-	let name = substitute(line, '.*'.rStatFinal.'\s\+'     .rType.     '\s\+'.'\('.rName.'\)'.'\s\+'.'=.*', '\1', '')
-	" Regex: match against...
-	"  .*        anything
-	"  static    'static'
-	"  \s\+      whitespace
-	"  final     'final'
-	"  \<\w\+\>  a word -> that's the type
-	"  \s\+      whitespace
-	"  \<\w\+\>  another word -> that's the name
-	"  \s\+      whitespace
-	"  =         '='
-
-	let substDict = { '%n': name, '%t': type, '%{': '{@code' }
-
-
-	" Helper string, that's shorter than the whole 'private static final Integer yadda yadda yadda'
-	let promptLine  = substitute(line, '.*'.rStatFinal.'\s\+'.'\('.rType.'\s\+'.rName.'.*'.'\)', '\1', '')
-	let tokenString = '   %n: '.name.', %t: '.type
-
-
-	" Helping Output
-	echo promptLine
-	echo tokenString
-
-	" Prompt for the description
-	let desc = JdocInput('', name)
-
-	" Possibly multiple lines...
-	let desc = split(desc, newlinePattern)
-
-	" Substitute tokens
-	let desc = JdocSubstituteTokens(desc, substDict)
-
-	" Add period if missing
-	let desc[0] = JdocCapitalAndPeriod(desc[0])
-
-
-	" Create the final comment
-
-	" If the comment is a multiline...
-	if len(desc) > 1
-
-		" ... start making a comment...
-		let comment = ['/**']
-
-		" ... add all the lines...
-		for line in desc
-			let comment = comment + [' * '.line]
-		endfor
-
-		" ... and add a comment-closer
-		let comment = comment + [' */']
-
-
-	" ... Else it must be a single line...
-	else
-		" ... so make a single line javadoc!
-		let comment = ['/** '.desc[0].' */']
-	endif
+	" Now let's attach the genericParameters
 
 	return comment
 
 endfunc
 
-" Takes a single line and returns it with the first letter in uppercase and
-" a period at the end
-func! JdocCapitalAndPeriod(str)
-
-	let str = a:str
-
-	" Get just the first char, uppercase it
-	let firstChar = toupper(str[0])
-
-	" Get everything but the first char
-	let str = str[1:len(str)]
-
-	" Concatenate = uppercase the first char of a string
-	let str = firstChar.str
-
-	" Possibly add a period at the end
-	if str[len(str)-1] != '.'
-		let str = str.'.'
-	endif
-
-	return str
-
-endfunc
-
-" available tokens
-" %n 	name
-" %t 	return type
-" %pN	parameter n
-" %r 	@return
-" %x 	@throws
-" %{ 	{@code
-" \ 	newline, that is 'backslash space'
-" \n	newline, that is 'backslash space'
+" Generates Jdocs for a static final
 "
-" these are always all available, but they won't necessarily be listed in the
-" active help-text. If the return typoe is void, it's pretty useless to have
-" it on screen, in that case you also don't need to know about @return, but
-" those tokens are always available, for if you want to do strange things.
-
-
-" Figure out on what line the method ends
-func! JdocFindMethodEndLine()
-
-	" Store cursor position
-	let oldPos = getpos('.')
-
-	" Find the opening { of the method's code block and jump to the closing partner
-	norm! 0f{
-	norm! %
-
-	" Save, where the } is
-	let newPos = getpos('.')
-
-	" Go back to original position
-	call setpos('.', oldPos)
-
-	return newPos[1]
-
-endfunc
-
-
-" Returns a list of strings, that represent a jdoc for a method declaration
+" The function returns a list of lines, that can be added to the file with
+" AddLines()
 "
 " This one is getting a bit long, even with some repeated code... But since
 " I'm not going to repeat any of this stuff exactly anywhere else, I'm going
@@ -1427,7 +1294,7 @@ func! JdocGenMethod()
 	" ----------------------------
 
 	" Standard tokens
-	let substDict = { '%n': name, '%t': type, '%r': '@return', '%x': '@throws', '%{': '{@code', '%p': '@param' }
+	let substDict = { '%n': name, '%t': type, '%r': '@return', '%x': '@throws', '%{': '{@code', '%P': '@param' }
 
 	" Dynamic parameter tokens
 	for i in range(len(params))
@@ -1519,6 +1386,8 @@ func! JdocGenMethod()
 	" Tag Indentation
 	" ---------------
 	"
+	" Note: this is mostly handled by the function JdocComputeIndent() now...
+	"
 	" The bit, where I want the tags to all be aligned like this:
 	"
 	"   * @param honk       	a honk
@@ -1554,15 +1423,9 @@ func! JdocGenMethod()
 	" Compute, how many chars long all tags should be
 	" -----------------------------------------------
 
-	let longestTagLength = 0
 
 	" Find the longest argument tag
-	for tag in paramsTags
-		let n = len(tag)
-		if n > longestTagLength
-			let longestTagLength = n
-		endif
-	endfor
+	let longestTagLength = JdocComputeIndent(paramsTags)
 
 	" Check, if the return tag would be longer.
 	if addReturnTag
@@ -1577,58 +1440,17 @@ func! JdocGenMethod()
 	" are really long and unwieldy, I want this stuff to remain
 	" readable...
 	if longestTagLength == 0
-		for exc in exceptTags
-			let n = len(exc)
-			if n > longestTagLength
-				let longestTagLength = n
-			endif
-		endfor
+		let longestTagLength = JdocComputeIndent(exceptTags)
 	endif
 
 
-	" Adjust indentation of Tags
-	" --------------------------
 
-	" Add missing spaces to shorter tags...
-	for i in range(len(paramsTags))
-		while len(paramsTags[i]) < longestTagLength
-			let paramsTags[i] = paramsTags[i].' '
-		endwhile
-	endfor
-
-	" ... and exceptions...
-	for i in range(len(exceptTags))
-		while len(exceptTags[i]) < longestTagLength
-			let exceptTags[i] = exceptTags[i].' '
-		endwhile
-	endfor
-
-	" ... and the return tag
-	if addReturnTag
-		while len(typeTag) < longestTagLength
-			let typeTag = typeTag.' '
-		endwhile
-	endif
-
-	" Make the spaces required to format the possible newlines in the tags
-	let tagSpaces = ''
-	while len(tagSpaces) < longestTagLength
-		let tagSpaces = tagSpaces.' '
-	endwhile
-
-
-	" Newlines and building the Comment
-	" ---------------------------------
-
-	" I split the lines on the possible newline tokens.
-	" To keep the indentation I want as simple as possible to
-	" make, I'm splitting and concatenating the resulting lines
-	" into the final 'comment'-list now.
-
-	" Combine all lines into the final comment
+	" MAKE THE ACTUAL COMMENT
+	" =======================
 
 	" A javadoc comment starts with '/**'
 	let comment = ['/**']
+
 
 	" Description lines
 	let desc = split(desc, newlinePattern)
@@ -1641,86 +1463,21 @@ func! JdocGenMethod()
 		let comment = comment + [' * '.line]
 	endfor
 
-	" Add all the parameter lines.
-	" These might also contain newlines, so split and add to the comment
-	" list.
-	for i in range(len(paramsDesc))
 
-		" Add an empty line after the previous thing/tag
-		let comment = comment + [' *']
+	" Parameter Lines
+	let comment = comment + JdocBuildTagsDescs(paramsTags, paramsDesc, longestTagLength)
 
-		" Turn the specific paramsDesc description into the
-		" appropriately split lines
-		let lines = split(paramsDesc[i], newlinePattern)
-
-		" Make sure to get valid list indeces, there might not be any
-		" parameter lines to add
-		let len = len(lines)
-		if len > 0
-
-			" Add the first (and possibly only) line
-			let comment = comment + [' * '.paramsTags[i].'	'.lines[0]]
-
-			" If there are more lines to add, add those with the
-			" appropriate indentation
-			if len > 1
-				for j in range(1, len-1)
-					let comment = comment + [' * '.tagSpaces.'	'.lines[j]]
-				endfor
-			endif
-		endif
-
-	endfor
-
-	" And now for the Exceptions lines...
-	for i in range(len(exceptDesc))
-
-		" Add an empty line after the previous thing/tag
-		let comment = comment + [' *']
-
-		let lines = split(exceptDesc[i], newlinePattern)
-
-		" Make sure to get valid list indeces
-		let len = len(lines)
-		if len > 0
-
-			" Add the first (and possibly only) line
-			let comment = comment + [' * '.exceptTags[i].'	'.lines[0]]
-
-			" If there are more lines to add, add those with the
-			" appropriate indentation
-			if len > 1
-				for j in range(1, len-1)
-					let comment = comment + [' * '.tagSpaces.'	'.lines[j]]
-				endfor
-			endif
-		endif
-
-	endfor
+	" Parameter Lines
+	let comment = comment + JdocBuildTagsDescs(exceptTags, exceptDesc, longestTagLength)
 
 	" Optionally also add the return tag...
 	if addReturnTag
 
-		" Add an empty line after the previous thing/tag
+		" Add an empty line
 		let comment = comment + [' *']
 
-		let typeDesc = split(typeDesc, newlinePattern)
-
-		" Make sure to get valid list indeces
-		let len = len(typeDesc)
-		if len > 0
-
-			" Add the first line of return...
-			let comment = comment + [' * '.typeTag.'	'.typeDesc[0]]
-
-			" ... And possibly some more
-			if len > 1
-				for i in range(1, len-1)
-					let comment = comment + [' * '.tagSpaces.'	'.typeDesc[i]]
-				endfor
-			endif
-		endif
-
+		" Add the return tag
+		let comment = comment + JdocCombineTagDescription(typeTag, typeDesc, longestTagLength)
 	endif
 
 
@@ -1741,6 +1498,251 @@ func! JdocGenMethod()
 
 endfunc
 
+" Generates Jdocs for a static final
+"
+" The function returns a list of lines, that can be added to the file with
+" AddLines()
+func! JdocGenConst()
+
+	" Get data
+	let line = getline('.')
+	let newlinePattern = s:JdocNewlinePattern
+
+	" Get the regex types
+	let rStatFinal = 'static\s\+final'
+	let rType = s:r_type
+	let rName = s:r_name
+
+
+	" Let's make a token dictionairy, shall we?
+
+	let type = substitute(line, '.*'.rStatFinal.'\s\+'.'\('.rType.'\)'.'\s\+'     .rName.     '\s\+'.'=.*', '\1', '')
+	let name = substitute(line, '.*'.rStatFinal.'\s\+'     .rType.     '\s\+'.'\('.rName.'\)'.'\s\+'.'=.*', '\1', '')
+	" Regex: match against...
+	"  .*        anything
+	"  static    'static'
+	"  \s\+      whitespace
+	"  final     'final'
+	"  \<\w\+\>  a word -> that's the type
+	"  \s\+      whitespace
+	"  \<\w\+\>  another word -> that's the name
+	"  \s\+      whitespace
+	"  =         '='
+
+	let substDict = { '%n': name, '%t': type, '%{': '{@code' }
+
+
+	" Helper string, that's shorter than the whole 'private static final Integer yadda yadda yadda'
+	let promptLine  = substitute(line, '.*'.rStatFinal.'\s\+'.'\('.rType.'\s\+'.rName.'.*'.'\)', '\1', '')
+	let tokenString = '   %n: '.name.', %t: '.type
+
+
+	" Helping Output
+	echo promptLine
+	echo tokenString
+
+	" Prompt for the description
+	let desc = JdocInput('', name)
+
+	" Possibly multiple lines...
+	let desc = split(desc, newlinePattern)
+
+	" Substitute tokens
+	let desc = JdocSubstituteTokens(desc, substDict)
+
+	" Add period if missing
+	let desc[0] = JdocCapitalAndPeriod(desc[0])
+
+
+	" Create the final comment
+
+	" If the comment is a multiline...
+	if len(desc) > 1
+
+		" ... start making a comment...
+		let comment = ['/**']
+
+		" ... add all the lines...
+		for line in desc
+			let comment = comment + [' * '.line]
+		endfor
+
+		" ... and add a comment-closer
+		let comment = comment + [' */']
+
+
+	" ... Else it must be a single line...
+	else
+		" ... so make a single line javadoc!
+		let comment = ['/** '.desc[0].' */']
+	endif
+
+	return comment
+
+endfunc
+
+" Makes the jdoc lines, that start with a tag.
+"
+" Returns a list of properly formatted jdoc lines for all the
+" tags and their descriptions.
+"
+" Takes a list of tags like '@param name' and a list of
+" corresponding descriptions. The description for a tag in the
+" descs list should be at the same index as the tag is in the
+" tags list.
+"
+" Optionally you can provide an override for the number of
+" indentation spaces (eg for the indents on exceptions), otherwise
+" the longest tag is used as the base for the indentation
+func! JdocBuildTagsDescs(tags, descs, ...)
+
+	" This is more convenient:
+	let descs = a:descs
+	let tags  = a:tags
+
+	" If an indent length was provided, use that
+	if a:0 > 0
+		let indent = a:1
+
+	" Otherwise compute one
+	else
+		let indent = JdocComputeIndent(tags)
+	endif
+
+	let output = []
+	for i in range(len(tags))
+
+		" Add an empty line between tags
+		let output = output + [' *']
+
+		" Add the next tag
+		let output = output + JdocCombineTagDescription(tags[i], descs[i], indent)
+
+	endfor
+
+	return output
+
+endfunc
+
+" Computes the number of characters, that should come before the tab in a
+" jdoc-param line:
+"
+" Computes the number of characters from
+"   here  to     here
+"     ↓           ↓
+"   * @param name  	description
+"   * @param name2 	description
+"   * @param name33	description
+"     ↑           ↑
+func! JdocComputeIndent(tags)
+
+	let tags = a:tags
+
+	let maxLength = 0
+
+	for tag in tags
+		let len = len(tag)
+		if len > maxLength
+			let maxLength = len
+		endif
+	endfor
+
+	return maxLength
+
+endfunc
+
+" Combines a single tag with its description line or lines, if there are
+" multiple description lines.
+func! JdocCombineTagDescription(tag, desc, indent)
+
+	let tag    = a:tag
+	let indent = a:indent
+
+	" Split the description into lines
+	let newlinePattern = s:JdocNewlinePattern
+	let desc = split(a:desc, newlinePattern)
+
+	" Adjust indentation length of the tag
+	while len(tag) < indent
+		let tag = tag.' '
+	endwhile
+
+
+	" Add the line with the actual tag
+	let output = [' * '.tag.'	'.desc[0]]
+
+	" Now, if there are multiple lines in the description...
+	if len(desc) > 1
+
+		" Make indentation for the lines
+		let indentSpaces = ''
+		while len(indentSpaces) < indent
+			let indentSpaces = indentSpaces.' '
+		endwhile
+
+		" Go through the lines of the description, but skip the first
+		for i in range(1, len(desc)-1)
+
+			" Add the lines
+			let output = output + [' * '.indentSpaces.'	'.desc[i]]
+
+		endfor
+
+	endif
+
+	return output
+
+endfunc
+
+" Uppercases the first letter of a string and adds a period to the end, if
+" there is none.
+"
+" This is used to format the first line of any javadoc to fit expectations.
+func! JdocCapitalAndPeriod(str)
+
+	let str = a:str
+
+	" Get just the first char, uppercase it
+	let firstChar = toupper(str[0])
+
+	" Get everything but the first char
+	let str = str[1:len(str)]
+
+	" Concatenate = uppercase the first char of a string
+	let str = firstChar.str
+
+	" Possibly add a period at the end
+	if str[len(str)-1] != '.'
+		let str = str.'.'
+	endif
+
+	return str
+
+endfunc
+
+" Returns the line on which the current method ends
+func! JdocFindMethodEndLine()
+
+	" Store cursor position
+	let oldPos = getpos('.')
+
+	" Find the opening { of the method's code block and jump to the closing partner
+	norm! 0f{
+	norm! %
+
+	" Save, where the } is
+	let newPos = getpos('.')
+
+	" Go back to original position
+	call setpos('.', oldPos)
+
+	return newPos[1]
+
+endfunc
+
+" Prompts for input
+"
+" Takes a prompt string and a default return value for if there's no input
 func! JdocInput(prompt, default)
 
 	let in = input(' > '.a:prompt)
@@ -1753,7 +1755,10 @@ func! JdocInput(prompt, default)
 
 endfunc
 
-" Note: comment has to be a list
+" Substitute the shorthand tokens in inputs from the prompt
+"
+" Takes a list of lines in the comment and a dictionairy of tokens and the
+" value they should be substituted for.
 func! JdocSubstituteTokens(comment, dictionairy)
 
 	let comment = a:comment
@@ -1772,7 +1777,8 @@ func! JdocSubstituteTokens(comment, dictionairy)
 
 endfunc
 
-
+" Function that adds a list of javadoc-lines to current buffer, above the line
+" the cursor's on.
 func! JdocAddComment(comment)
 
 	let oldPos = getpos('.')
@@ -1791,61 +1797,9 @@ func! JdocAddComment(comment)
 
 endfunc
 
-" the style of jdocs this will generate is in accordance with the given stuff from uni, I know, it looks disgusting!
-"
-" /**
-"  * Some description goes here.
-"  *
-"  * @param paramName
-"  *		the thing for the parameter...
-"  *
-"  * @param paramName
-"  *		the thing for the parameter...
-"  *
-"  * @return
-"  *		the thing for the return...
-"  */
-"
-"
-"
-" hang on, you can just count how many chars a string contains and then use
-"   / 4  and
-"   % 4
-" to figure out how many tabs to add and how many spaces to add afterwards to get to a certain length
-"
-" Then you only need to figure out the longest of the generated param tags and you know,
-" how many tabs and or spaces to add to make all the lines nicely aligned!
-"
-"
-" THAT MEANS WE CAN MAKE THIS SHITE LOOK NICE AS WELL!!!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 " Simple Adders
+" =============
 
 " Set the visibility to private, public
 " 1 sets to private
@@ -1866,18 +1820,18 @@ func! s:MethodStatic(flag)
 endfunc
 
 
-
-
 " Input Functions
+" ===============
 
-" prompts for a type
+
+" Prompts for a type
 "
-" takes an optional default value, that is used in place of the std default of
+" Takes an optional default value, that is used in place of the std default of
 " int, if this is '' int is used as well
 "
-" takes a prompt as second optional argument
+" Takes a prompt as second optional argument
 "
-" returns type in upper camel case (java convention), but
+" Returns type in upper camel case (java convention), but
 " doesn't change any of the java primitives.
 "
 " Usage:
@@ -1886,13 +1840,13 @@ endfunc
 "  s:GetType('defaultType', 'Enter sth: ')	use defaultType and use 'Enter sth: ' instead of default prompt
 "  s:GetType('', 'Enter sth: ')			use default type int and 'Enter sth: '
 "
-" substitutes the following shorthands to primitives:
-" i	int
-" S	short
-" d	double
-" f	float
-" b	boolean
-" s	String (I know, this is no primitive!)
+" Substitutes the following shorthands to primitives:
+"   i	int
+"   S	short
+"   d	double
+"   f	float
+"   b	boolean
+"   s	String (I know, this is no primitive!)
 func! s:GetType(...)
 
 	" primitives and a lookup table
@@ -1922,23 +1876,23 @@ func! s:GetType(...)
 
 endfunc
 
-" prompts for a type that is to be placed in a generic field
+" Prompts for a type that is to be placed in a generic field
 "
-" takes an optional default value, that is used in place of the std default of
+" Takes an optional default value, that is used in place of the std default of
 " int, if this is '' int is used as well
 "
-" takes a prompt as second optional argument
+" Takes a prompt as second optional argument
 "
-" returns type in upper camel case (java convention), and
+" Returns type in upper camel case (java convention), and
 " changes the java primitives to their wrapper class equivalents.
 "
-" substitutes the following shorthands to primitive wrappers:
-" i	Integer
-" S	Short
-" d	Double
-" f	Float
-" b	Boolean
-" s	String (I know, this is no primitive!)
+" Substitutes the following shorthands to primitive wrappers:
+"   i	Integer
+"   S	Short
+"   d	Double
+"   f	Float
+"   b	Boolean
+"   s	String (I know, this is no primitive!)
 func! s:GetTypeGeneric(...)
 
 	" primitives and a lookup table
@@ -1970,7 +1924,7 @@ func! s:GetTypeGeneric(...)
 
 endfunc
 
-" actually does the type getting, formatting and shorthand substituting
+" Helper that actually does the type getting, formatting and shorthand substituting
 func! s:GetTypeHelper(primitives, primitives_shorthands, default, prompt)
 
 	let type = input(a:prompt)
@@ -2019,13 +1973,13 @@ func! s:GetTypeHelper(primitives, primitives_shorthands, default, prompt)
 
 endfunc
 
-
-" prompts for a name
+" Prompts for a name
+"
 " mode 0 returns name in all caps snake case
 " mode 1 in lower camel case
 " mode 2 in upper camel case
 "
-" optionally takes an alternate prompt
+" Optionally takes an alternate prompt to the default
 func! s:GetName(mode, ...)
 
 	" handle prompt
@@ -2059,6 +2013,7 @@ func! s:GetName(mode, ...)
 
 endfunc
 
+" Prompts for arguments on method constructors
 func! s:GetArgs(arg_prompt)
 
 	let args = input(a:arg_prompt)
