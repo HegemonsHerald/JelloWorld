@@ -81,13 +81,14 @@ func! JavaTemplateGeneral()
 	let dirname	= expand('%:p:h:t')
 	let package	= 'package '.dirname.';'
 	let class	= 'public class '.filename.' {'
+	let override    = '@Override'
 	let main	= 'public static void main(String args[]) {'
 
-	let lines = [ package, '', class, '', main, '', '', '}', '', '}' ]
+	let lines = [ package, '', override, class, '', main, '', '', '}', '', '}' ]
 
 	call AddLines(lines)
 
-	norm 5jo░
+	norm 6jo░
 	norm x
 
 	startinsert!
@@ -101,14 +102,15 @@ func! JavaTemplateACMConsole()
 	let dirname	= expand('%:p:h:t')
 	let package	= 'package '.dirname.';'
 	let import	= 'import acm.program.ConsoleProgram;'
+	let override    = '@Override'
 	let class	= 'public class '.filename.' extends ConsoleProgram {'
 	let main	= 'public void run() {'
 
-	let lines = [ package, '', import, '', class, '', main, '', '', '}', '', '}' ]
+	let lines = [ package, '', import, '', override, class, '', main, '', '', '}', '', '}' ]
 
 	call AddLines(lines)
 
-	norm 7jo░
+	norm 8jo░
 	norm x
 
 	startinsert!
@@ -123,14 +125,15 @@ func! JavaTemplateACMGraphics()
 	let package	= 'package '.dirname.';'
 	let import1	= 'import acm.program.GraphicsProgram;'
 	let import2	= 'import acm.graphics.*;'
+	let override    = '@Override'
 	let class	= 'public class '.filename.' extends ConsoleProgram {'
 	let main	= 'public void run() {'
 
-	let lines = [ package, '', import1, import2, '', class, '', main, '', '', '}', '', '}' ]
+	let lines = [ package, '', import1, import2, '', override, class, '', main, '', '', '}', '', '}' ]
 
 	call AddLines(lines)
 
-	norm 8jo░
+	norm 9jo░
 	norm x
 
 	startinsert!
@@ -904,6 +907,7 @@ let s:r_type = s:r_word.s:r_arrayBrackets " the array-denoting '[]' could be aft
 let s:r_name = s:r_word.s:r_arrayBrackets " ... or after the name
 
 let s:r_classKeywordPattern = '\(interface\|class\|enum\)'
+let s:r_classExtendsPattern = '\s\+\(extends\s\+'.s:r_word.'\)\='
 let s:r_constKeywordPattern = 'static\s\+final'
 let s:r_excepKeywordPattern = '\s*throw\s\+\(new\s\+\)\='
 
@@ -1049,9 +1053,10 @@ func! JdocGenClass()
 	" Get data
 
 	let line = getline('.')
+	let rWord = s:r_word
 	let newlinePattern = s:r_newlinePattern
 	let keywordPattern = s:r_classKeywordPattern
-	let rWord = s:r_word
+	let extendsPattern = s:r_classExtendsPattern
 
 	let name = substitute(line, '.*'.keywordPattern.'\s\+'. '\(' . rWord . '\)' .'.*', '\2', '')
 
@@ -1060,7 +1065,7 @@ func! JdocGenClass()
 	" -------------------
 
 	" Get generic parameters
-	let genericParameters = substitute(line, '.*'.keywordPattern.'\s\+'.rWord . '\(\s*<' . '\(.*\)' . '>\)\=' .'\s*'.'{', '\3', '')
+	let genericParameters = substitute(line, '.*'.keywordPattern.'\s\+'.rWord . '\(\s*<' . '\(.*\)' . '>\)\=' .'\s*'.extendsPattern.'\s*'.'{', '\3', '')
 
 	" Get rid of any spaces among the parameters
 	let genericParameters = substitute(trim(genericParameters), ' ', '', '')
@@ -1083,7 +1088,7 @@ func! JdocGenClass()
 	" Get just the stuff after the class/interface keyword and before the {
 	" The weird pattern after the rWord is a match for an optional
 	" declaration of generic types
-	let promptLine  = substitute(line, '.*'.keywordPattern.'\s\+'. '\(' . rWord.'\(\s*<.*>\)\=' . '\)' .'\s*'.'{', '\2', '')
+	let promptLine  = substitute(line, '.*'.keywordPattern.'\s\+'. '\(' . rWord.'\(\s*<.*>\)\='.extendsPattern . '\)' .'\s*'.'{', '\2', '')
 	let promptLine  = trim(promptLine)
 	let tokenString = '   %n: '.name
 
