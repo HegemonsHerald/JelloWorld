@@ -1,0 +1,29 @@
+
+// get colums of thing, so you can use contains()
+// here's one interesting question, can you use
+// contains with just an array as well?
+
+getColumn(columnIndex)
+  getNumberOfRows
+
+  column = new array[numberOfRows]
+
+  for (i, v) in rows do
+    column[i] = v
+  done
+
+  return column;
+endfunc
+
+getColumns()
+  getWidthOfWidestColumn
+
+  columns = array[widest]
+
+  for i=0 smaller widestColumn
+    columns[i] = getColumn[i]
+  endfor
+
+  return columns;
+
+endfunc
