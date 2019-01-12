@@ -1,0 +1,140 @@
+
+
+
+/*
+ * this possibly with an offset, if you also have to add the numbers and letters labelling of the coordinates...
+ * those then just with loops and offsets!
+ */
+
+
+// LOOPY SOLUTION
+
+
+drawRect(x, y) {
+
+	x = x * SCALING_FACTOR
+	y = y * SCALING_FACTOR
+
+	rect = new GRect(WIDTH, HEIGHT)
+	rect.setFilled(true)
+	rect.setColor()
+
+	add(rect, x, y);
+
+	/* possibly the border seperately? */
+
+}
+
+for y = 0; y < 8 {
+
+	x = 0
+	divisor = y % 2 ? 1 : 2 // each even-indexed row gets shifted, each odd-indexed row doesn't... or sth
+
+	for x = 0; x < 8 {
+
+		// if x (the rect's index) is an even or odd number, depending on whether y is even or odd
+		if x % divisor == IDK {
+			drawRect(x, y)
+		}
+
+	}
+
+}
+
+// OR THAT A BIT SHORTER AND CLEVERERERER
+
+for y = 0; y < 8 { // loop the rows
+
+	for x = 0; x < 8 { // loop the columns
+
+		if y%2 && x%2 // if y is even draw, a rect on the even x'
+			drawRect(x, y)
+
+		else if !y%2 && !x%2 // if y is odd, draw a rect on the odd x'
+			drawRect(x, y)
+	}
+}
+
+
+/*
+ * How to do this functionally...?
+ * ... Did that. Now the only thing left, would be a declarative way of doing this, but I'm too unfamiliar and it
+ * wouldn't be a beautiful solution.
+ *
+ * 	HARDCODED
+ *	drawRow(n) {
+ *		offset = n%2 ? 0 : -1   // if the row is even, draw rects in odd positions, else in even positions → checker pattern
+ *		drawRect(offset + 1, n) // either: 0+1=1  or: -1+1=0
+ *		drawRect(offset + 3, n) // either: 0+3=3  or: -1+3=2
+ *		drawRect(offset + 5, n) // ...         5  ...      4
+ *		drawRect(offset + 7, n) // ...         7  ...      6
+ *	}
+ *
+ *	drawBoard() {
+ *		drawRow(1)
+ *		drawRow(2)
+ *		drawRow(3)
+ *		drawRow(4)
+ *		drawRow(5)
+ *		drawRow(6)
+ *		drawRow(7)
+ *		drawRow(8)
+ *	}
+ *	
+ *	
+ *	RECURSIVELY
+ *
+ *
+ *	n = 0
+ *	
+ *	drawBoard(n) {
+ *		if n != 8 {
+ *			drawRow( n%2 ? 0 : 1, n ) // if n is even, start the rects at 0, else start at 1 → checker pattern!
+ *			drawBoard(++n)
+ *		}
+ *	}
+ *	
+ *	drawRow(rect_index, n) {
+ *		if rect_index != 8 {
+ *			drawRect(rect_index, n)
+ *			drawRow(rect_index+2)
+ *		}
+ *	}
+ *
+ *
+ * 	WITH COMMENTARY
+ *
+ * 	// counter used by drawBoard
+ *	n = 0
+ *	
+ *	// draw the board
+ *	drawBoard(n) {
+ *
+ *		// unless you've reached the last line of the board
+ *		if n != 8 {
+ *
+ *			// draw a row
+ *			// Ternary Operator: if the line number's even start drawing rects at 0, else at 1 → checker pattern
+ *			drawRow( n%2 ? 0 : 1, n)
+ *
+ *			// draw the next line
+ *			drawBoard(++n)
+ *		}
+ *	}
+ *	
+ *	// draw a row
+ *	// rect_index is the x coordinate of the to-be-drawn rectangle
+ *	// 	      On initial call it's the index position of the first rectangle
+ *	// n	      is the index position of the current row (for the y values of the rects)
+ *	drawRow(rect_index, n) {
+ *
+ *		// lest you've reached the last column
+ *		if rect_index != 8 {
+ *
+ *			// draw a rect with rect_index as x and n as y
+ *			drawRect(rect_index, n)
+ *
+ *			// draw the next rect, which is offset by two cause checker means black-white-black-...
+ *			drawRow(rect_index+2)
+ *		}
+ *	}

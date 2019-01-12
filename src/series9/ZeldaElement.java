@@ -1,4 +1,5 @@
-package programming.set9.zelda;
+package series9;
+// package programming.set9.zelda;
 
 /**
  * A linked list element that stores a value and a link to the next element, if
