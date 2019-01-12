@@ -1,7 +1,12 @@
 package series9;
 
-// programming.set9.zelda
+// programming.set9.zelda;
 
+/**
+ * ZeldaList.
+ *
+ * @param T	A value for T
+ */
 public class ZeldaList<T> {
 
 	// Where to put the head of this linked list.
