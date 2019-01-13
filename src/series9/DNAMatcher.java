@@ -64,26 +64,16 @@ public class DNAMatcher {
 	 */
 	public int findFirstBindingPosition(String candidateDNA) {
 
+		/* Check input validity */
+
+		if (!isValid(baseDNA)) throw new IllegalArgumentException();
+
 		/*
 		 * They wrote in the task, that one should use this as an excercise in abstracting methods.
 		 * I take this to mean: Follow the good procedural-paradigm tradition of not unnecessarily
 		 * refactoring code into methods, if it's only ever used in one place... So here, have my
 		 * one beautiful long function! =)
 		 */
-
-		/* Check input validity */
-
-		// Check for null, empty String and length
-		if (candidateDNA == null || candidateDNA.equals("") || candidateDNA.length() > baseDNA.length()) throw new IllegalArgumentException();
-
-		// Check for only valid letters
-		for (char c : candidateDNA.toCharArray()) {
-
-			// If the BASE doesn't contain a character from candidateDNA, it's invalid!
-			if (!"ACGT".contains(""+c)) throw new IllegalArgumentException();
-
-		}
-
 
 		/* Invert Candidate DNA */
 

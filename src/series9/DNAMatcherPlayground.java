@@ -7,8 +7,15 @@ public class DNAMatcherPlayground {
 		DNAMatcher d1 = new DNAMatcher("ATTCCTAATGTCAATT");
 		DNAMatcher d2 = new DNAMatcher("CTAAGGGGTCTCATATC");
 
+		// can't create bad dna
+		try {
+			DNAMatcher d3 = new DNAMatcher("ABCD");
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg on Bad baseDNA");
+		}
+
 		// matches test string
-		//System.out.println(d1.findFirstBindingPosition("GATTACA"));
+		System.out.println(d1.findFirstBindingPosition("GATTACA"));
 		System.out.println(d2.findFirstBindingPosition("CCCAGAGT"));
 
 		// finds empty string
@@ -26,7 +33,11 @@ public class DNAMatcherPlayground {
 		}
 
 		// finds invalid chars
-		System.out.println(d1.findFirstBindingPosition("{|=BCA-]"));
+		try {
+			System.out.println(d1.findFirstBindingPosition("{|=BCA-]"));
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg on {|=BCA-]");
+		}
 
 		// finds too long
 		try {
