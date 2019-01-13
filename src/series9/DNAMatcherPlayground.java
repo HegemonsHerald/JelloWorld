@@ -49,6 +49,44 @@ public class DNAMatcherPlayground {
 		// doesn't find not-matching string
 		System.out.println(d1.findFirstBindingPosition("GATTC"));
 
+
+		// Test the minified version
+
+		// success
+		System.out.println(DNAMatcherMini.findFirstBindingPosition("ATTCCTAATGTCAATT", "GATTACA"));
+		// success
+		System.out.println(DNAMatcherMini.findFirstBindingPosition("CTAAGGGGTCTCATATC", "CCCAGAGT"));
+		try {
+		System.out.println(DNAMatcherMini.findFirstBindingPosition("ATTCCTAATGTCAATT", ""));
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg exc");
+		}
+		try {
+		System.out.println(DNAMatcherMini.findFirstBindingPosition("", "GATTACA"));
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg exc");
+		}
+		try {
+		System.out.println(DNAMatcherMini.findFirstBindingPosition(null, "GATTACA"));
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg exc");
+		}
+		try {
+		System.out.println(DNAMatcherMini.findFirstBindingPosition("A", null));
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg exc");
+		}
+		try {
+		System.out.println(DNAMatcherMini.findFirstBindingPosition("AABB", "GATTACA"));
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg exc");
+		}
+		try {
+		System.out.println(DNAMatcherMini.findFirstBindingPosition("AA", "BBBB"));
+		} catch (IllegalArgumentException e) {
+			System.out.println("caught illegal arg exc");
+		}
+
 	}
 
 }
