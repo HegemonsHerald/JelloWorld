@@ -5,9 +5,11 @@ public class DNAMatcherPlayground {
 	public static void main(String args[]) {
 
 		DNAMatcher d1 = new DNAMatcher("ATTCCTAATGTCAATT");
+		DNAMatcher d2 = new DNAMatcher("CTAAGGGGTCTCATATC");
 
 		// matches test string
-		System.out.println(d1.findFirstBindingPosition("GATTACA"));
+		//System.out.println(d1.findFirstBindingPosition("GATTACA"));
+		System.out.println(d2.findFirstBindingPosition("CCCAGAGT"));
 
 		// finds empty string
 		try {
@@ -24,7 +26,7 @@ public class DNAMatcherPlayground {
 		}
 
 		// finds invalid chars
-		System.out.println(d1.findFirstBindingPosition("{|=-]"));
+		System.out.println(d1.findFirstBindingPosition("{|=BCA-]"));
 
 		// finds too long
 		try {

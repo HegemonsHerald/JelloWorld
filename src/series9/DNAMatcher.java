@@ -3,8 +3,6 @@ package series9;
 /** DNAMatcher. */
 public class DNAMatcher {
 
-	private static final String BASE = "ACGT";
-
 	private String baseDNA;
 
 	/**
@@ -16,10 +14,41 @@ public class DNAMatcher {
 	 */
 	public DNAMatcher(String baseDNA) {
 
+		if (!isValid(baseDNA)) throw new IllegalArgumentException();
+
 		this.baseDNA = baseDNA;
 
 	}
 
+	/**
+	 * Is a string a valid base encoding?
+	 *
+	 * @param dna	A value for dna
+	 *
+	 * @return   	The method returns a value of type boolean
+	 */
+	private boolean isValid(String dna) {
+
+		// Check for null, empty String
+		if (dna == null || dna.equals("")) return false;
+
+		// If a DNAMatcher object already exists, also check the length against baseDNA
+		if (baseDNA != null) {
+
+			if (dna.length() > baseDNA.length()) return false;
+
+		}
+
+		// Check for only valid letters
+		for (char c : dna.toCharArray()) {
+
+			if (!"ACGT".contains(""+c)) return false;
+
+		}
+
+		return true;
+
+	}
 
 	/**
 	 * Returns the index of the first position in the base DNA string where
@@ -51,7 +80,7 @@ public class DNAMatcher {
 		for (char c : candidateDNA.toCharArray()) {
 
 			// If the BASE doesn't contain a character from candidateDNA, it's invalid!
-			if (!BASE.contains(""+c)) return -1;
+			if (!"ACGT".contains(""+c)) throw new IllegalArgumentException();
 
 		}
 
@@ -66,27 +95,52 @@ public class DNAMatcher {
 		 * in the base-pairs.
 		 */
 
-		String matchCandidate = candidateDNA;
+		String candidate = candidateDNA;
 
 		// Replace the bases A and C with X and Y, respectively
-		matchCandidate = matchCandidate.replaceAll("A", "X");
-		matchCandidate = matchCandidate.replaceAll("C", "Y");
+		candidate = candidate.replaceAll("A", "X");
+		candidate = candidate.replaceAll("C", "Y");
 
 		// Replace the bases G and T with C and A, respectively
-		matchCandidate = matchCandidate.replaceAll("G", "C");
-		matchCandidate = matchCandidate.replaceAll("T", "A");
+		candidate = candidate.replaceAll("G", "C");
+		candidate = candidate.replaceAll("T", "A");
 
 		// Replace the tokens X and Y with T and G, respectively
-		matchCandidate = matchCandidate.replaceAll("X", "T");
-		matchCandidate = matchCandidate.replaceAll("Y", "G");
+		candidate = candidate.replaceAll("X", "T");
+		candidate = candidate.replaceAll("Y", "G");
 
-		char[] matchChars = matchCandidate.toCharArray();
+		char[] candidateChars = candidate.toCharArray();
 
 
 		/* Do the Matching */
 
 		// Position of first match
 		int position = -1;
+
+		// First char of the candidate string
+		char firstCandidate = candidate.charAt(0);
+
+		// Go looking for the candidate string in baseDNA,
+		// but only as long as there are more chars left in baseDNA, than there are in candidateChars!
+		for (int i = 0; i <= (baseDNA.length() - candidate.length()); i++) {
+
+			// If the first char of the candidates matches the char we're on in baseDNA...
+			if (baseDNA.charAt(i) == firstCandidate) {
+
+				// ... find out wether the following chars match as well!
+				String possibleMatch = baseDNA.substring(i, candidate.length());
+
+				// Is the rest of baseDNA shorter than the candidate string?
+				position = i;
+
+			}
+
+		}
+		return 42;
+
+
+		/*
+
 
 		// Flag, whether the candidate matches or not
 		boolean matches = false;
@@ -183,7 +237,6 @@ public class DNAMatcher {
 					 *   - - - C ∙ ∙ ∙
 					 *
 					 * And that's just what we want, another match begins!
-					 */
 
 				}
 
@@ -195,5 +248,6 @@ public class DNAMatcher {
 
 		// If you got here, you didn't fully match the candidate
 		return -1;
+					 */
 	}
 }

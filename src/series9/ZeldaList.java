@@ -1,6 +1,6 @@
 package series9;
 
-// programming.set9.zelda;
+// package programming.set9.zelda;
 
 /**
  * ZeldaList.
@@ -19,6 +19,9 @@ public class ZeldaList<T> {
 	 *            the value to add. If {@code value == null}, nothing happens.
 	 */
 	public void add(T value) {
+
+		// Check for null
+		if (value == null) return;
 
 		// Make the ZE to add
 		ZeldaElement<T> v = new ZeldaElement<T>();

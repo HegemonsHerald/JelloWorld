@@ -101,6 +101,11 @@ public class MorseCoder {
 					// ... add it to the decoded string
 					decoded = decoded + REGULARS.get(indexOfRegular);
 
+				// Otherwise the input couldn't be properly decoded
+				} else {
+
+					return null;
+
 				}
 
 			}
@@ -112,6 +117,5 @@ public class MorseCoder {
 
 		return decoded;
 	}
-
 
 }
