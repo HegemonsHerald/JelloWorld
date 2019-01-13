@@ -1,5 +1,7 @@
 package series9;
 
+// package programming.set9.dna;
+
 /** DNAMatcher. */
 public class DNAMatcher {
 
@@ -27,7 +29,7 @@ public class DNAMatcher {
 	 *
 	 * @return   	The method returns a value of type boolean
 	 */
-	private boolean isValid(String dna) {
+	public boolean isValid(String dna) {
 
 		// Check for null, empty String
 		if (dna == null || dna.equals("")) return false;
@@ -66,7 +68,7 @@ public class DNAMatcher {
 
 		/* Check input validity */
 
-		if (!isValid(baseDNA)) throw new IllegalArgumentException();
+		if (!isValid(candidateDNA)) throw new IllegalArgumentException();
 
 		/*
 		 * They wrote in the task, that one should use this as an excercise in abstracting methods.
@@ -104,29 +106,51 @@ public class DNAMatcher {
 
 		/* Do the Matching */
 
-		// Position of first match
-		int position = -1;
+		/*
+		 * How this works:
+		 *
+		 * First I compare each char of baseDNA against the first char of the candidate,
+		 * so that I find all positions, where there could be a match.
+		 *
+		 * Once I found a possibly matching position, I create a substring of baseDNA,
+		 * that starts at the position of that possible match and is candidate.length()
+		 * characters long.
+		 * If I encountered a full match, this substring and candidate should be completely
+		 * equal, so I test for that.
+		 *
+		 * If they weren't equal, I keep on comparing firstCandidate against chars from
+		 * baseDNA, until I either found a match or reached the last possible position,
+		 * where a match could occur. That's the point where what's left of baseDNA
+		 * becomes shorter than candidate.
+		 */
 
 		// First char of the candidate string
 		char firstCandidate = candidate.charAt(0);
 
-		// Go looking for the candidate string in baseDNA,
-		// but only as long as there are more chars left in baseDNA, than there are in candidateChars!
+		// Go looking for the candidate string in baseDNA, but only as long as there are more chars left in baseDNA, than there are in candidateChars!
 		for (int i = 0; i <= (baseDNA.length() - candidate.length()); i++) {
 
-			// If the first char of the candidates matches the char we're on in baseDNA...
-			if (baseDNA.charAt(i) == firstCandidate) {
+			// If the first char of the candidates matches the char we're on in baseDNA
+			if (baseDNA.charAt(i) == firstCandidate && baseDNA.length() - i >= candidate.length()) {
 
 				// ... find out wether the following chars match as well!
-				String possibleMatch = baseDNA.substring(i, candidate.length());
+				String possibleMatch = baseDNA.substring(i, i + candidate.length());
 
-				// Is the rest of baseDNA shorter than the candidate string?
-				position = i;
+				// If the rest part of baseDNA is indeed equal to the candidate...
+				if (possibleMatch.equals(candidate)) {
+
+					// ... return the position of the match!
+					return i;
+
+				}
 
 			}
 
 		}
-		return 42;
+
+		// If you got through til here, you didn't find a match
+		return -1;
 
 	}
+
 }
