@@ -20,25 +20,29 @@ public class ZeldaList<T> {
 	 */
 	public void add(T value) {
 
-		// Check for null
+		// If the value is null, nothing happens
 		if (value == null) return;
 
-		// Make the ZE to add
-		ZeldaElement<T> v = new ZeldaElement<T>();
-		v.setValue(value); // this is also pretty stupid, why don't you have constructors?
+		// How long is the list?
+		int lastIndex = size()-1;
 
-		// If the list doesn't yet contain any elements...
-		if (isEmpty()) {
+		// If there is nothing in the list...
+		if (lastIndex == -1) {
 
-			head = v;
+			head = new ZeldaElement<T>();
+			head.setValue(value);
 
-		// Otherwise...
+		// If however there is sth in the list...
 		} else {
 
-			// Get the last element
-			ZeldaElement<T> last = getElement(size()-1);
+			// ... get the last element of the list
+			ZeldaElement<T> last = getElement(lastIndex);
 
-			// Link the last element to a new element
+			// make a new element to add
+			ZeldaElement<T> v = new ZeldaElement<T>();
+			v.setValue(value);
+			
+			// add the new element after the last element of the list
 			last.setNextElement(v);
 
 		}
@@ -128,7 +132,7 @@ public class ZeldaList<T> {
 	public T get(int index) {
 
 		// Is the index valid?
-		if (index >= size()) return null;
+		if (index >= size() || index < 0) return null;
 
 		// Get the element at index
 		ZeldaElement<T> el = getElement(index);
@@ -151,34 +155,23 @@ public class ZeldaList<T> {
 		if (isEmpty()) return null;
 
 		// Is the index out of bounds?
-		else if (index >= size()) return null;
+		else if (index >= size() || index < 0) return null;
 
-		// Otherwise get the element
-		return getElementRecurr(head, index);
-		// ... Man I wish I could do currying in java right now.
+		ZeldaElement<T> curr = head;
 
-	}
+		int i = index;
+		while (i > 0) {
 
-	/**
-	 * A helper for getElement that assumes the index to be valid, and
-	 * starts recursively walking down the list, always
-	 * decrementing the index until it reaches 0.
-	 *
-	 * @param el   	the element to start the recursion with
-	 *
-	 * @param index	the index to count down from
-	 *
-	 * @return     	the element at index {@code index }
-	 */
-	private ZeldaElement<T> getElementRecurr(ZeldaElement<T> el, int index) {
+			curr = curr.getNextElement();
+			i--;
 
-		// If this is the element to get
-		if (index == 0) return el;
+		}
 
-		// Else keep looking
-		return getElementRecurr(el.getNextElement(), --index);
+		return curr;
+
 
 	}
+
 
 	/**
 	 * Returns the smallest index where the given value appears in the list, if it does.
