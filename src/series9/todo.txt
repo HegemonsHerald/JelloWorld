@@ -1,0 +1,11 @@
+
+
+
+vim-codegen: generic param tags with <>
+
+ZeldaList:
+  add throws nullpointer, probably wrong length checks
+  remove throws nullpointer, probably when there is only one element in the list
+
+LinkLister:
+  you were supposed to check for the conditions, not assume them

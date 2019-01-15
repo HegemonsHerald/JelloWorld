@@ -87,7 +87,7 @@ public class MorseCoder {
 		for (String word : words) {
 
 			// ... split into morse code code elements
-			String codes[] = word.split(" ");
+			String codes[] = word.split(" +");
 
 			// Decode each morse code element
 			for (String code : codes) {

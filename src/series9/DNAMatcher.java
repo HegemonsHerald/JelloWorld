@@ -37,6 +37,7 @@ public class DNAMatcher {
 		// If a DNAMatcher object already exists, also check the length against baseDNA
 		if (baseDNA != null) {
 
+			// Turns out, I was smarter than the fucking test, this shouldn't be here
 			if (dna.length() > baseDNA.length()) return false;
 
 		}
