@@ -43,6 +43,27 @@ public class ZeldaElementPlayground {
 		z1.clear();
 		System.out.println(z1.isEmpty());	// true
 
+		z1.add(420);
+
+		System.out.println(z1.remove(420));
+
+		z1.add(420);
+		z1.add(330);	// 420, 330
+
+		System.out.println(z1.remove(420));
+		System.out.println(z1.get(0));
+
+		z1.add(420);
+		z1.add(420);
+
+		System.out.println(z1.get(2));
+		System.out.println(z1.remove(420));
+		System.out.println(z1.get(0));
+		System.out.println(z1.get(1));
+		System.out.println(z1.size());
+
+		z1.add(null);
+
 	}
 
 }

@@ -5,7 +5,7 @@ package series9;
 /**
  * ZeldaList.
  *
- * @param T	A value for T
+ * @param <T>	A value for T
  */
 public class ZeldaList<T> {
 
@@ -28,12 +28,11 @@ public class ZeldaList<T> {
 		v.setValue(value); // this is also pretty stupid, why don't you have constructors?
 
 		// If the list doesn't yet contain any elements...
-		int size = size();
-		if (size == 0) {
+		if (isEmpty()) {
 
-			// ... make this the first element of it
 			head = v;
 
+		// Otherwise...
 		} else {
 
 			// Get the last element
@@ -56,14 +55,39 @@ public class ZeldaList<T> {
 		// If there's nothing to remove, remove nothing
 		if ( value == null || !contains(value) ) return false;
 
-		// Get the element before the one to remove
-		ZeldaElement<T> prev = getElement(indexOf(value)-1);
+		// If there's only one element in the list...
+		if (size() < 2) {
+
+			// At this point the only element is the element to remove
+			clear();
+			return true;
+
+		}
+
+		// Otherwise there's stuff to do...
+
+		// Get the index and the element to remove
+		int index = indexOf(value);
+		ZeldaElement<T> removeMe = getElement(index);
 
 		// Get the element after the one to remove
-		ZeldaElement<T> next = (prev.getNextElement()).getNextElement();
+		ZeldaElement<T> next = removeMe.getNextElement();
 
-		// Link the element before to the element after
-		prev.setNextElement(next);
+		// If you are to remove the first element...
+		if (index == 0) {
+
+			head = next;
+
+		// ... Otherwise...
+		} else {
+
+			// Get the element before the one to remove
+			ZeldaElement<T> prev = getElement(indexOf(value)-1);
+
+			// Link the element before to the element after
+			prev.setNextElement(next);
+
+		}
 
 		// You were successfull
 		return true;
