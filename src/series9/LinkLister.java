@@ -47,7 +47,7 @@ public class LinkLister {
 		// Get lines!
 		String lines[] = markdown.split("\n");
 
-		// From each line...
+		// For each line, check that it contains a valid link
 		for (String line : lines) {
 
 			while (line.matches(REGEX_FULL)) {

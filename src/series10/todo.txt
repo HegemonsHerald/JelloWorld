@@ -1,0 +1,80 @@
+
+
+
+Artificial Art: Use the Dragon Curve
+
+  - Dragon Curve Fractal? Somehow?
+
+  - Or do this one:
+    Take the larger dimension (X or Y)
+    Say X is larger
+    Start at tile (Y/2,0)
+    Move with X++ until you reach tile (Y/2,X/2) [the center]
+    Each time you move, you increase the resolution of the tiling:
+      The outer most tile is just a square
+      The second is 4 squares
+      The third is 8 squares
+      etc
+    Impl: Create 2d array
+    use (center - coord) as a vector
+    based on the length, decide on the fraction to use for tiling
+
+    Color Gradient based on the vector direction and length?
+    Say Length (to subtile) maps to R,
+        X maps to G,
+        Y maps to B
+    Or actually do a circular gradient just based on the length to
+    sub tiles of a tile
+
+  - Or do this one: hard code a couple of Square Packing Problems
+
+
+
+Extra Task: Parse PN
+
+parse( Operator, previousOperator )
+
+   Op = Operator
+   L  = Left hand value
+   R  = Right hand value
+
+   if L != N
+	 LValue = parse( L, Operator )
+   else  LValue = N
+   
+   if R != N
+	 RValue = parse( L, Operator )
+   else  RValue = N
+
+   // An addition following a multiplication has to be parenthesized
+   if previousOperator == * && Operator == +
+      add( "(" + LValue + Op + RValue + ")" )
+   else
+      add( LValue + Op + RValue )
+
+   // The other cases are:
+   //   previous  current  parens?
+   //       +        +       ✗
+   //       +        *       ✗
+   //       *        +       ✓
+   //       *        *       ✗
+   //
+   // Heya boolean equation:
+   // true be '== *'
+   // previous be x
+   // current  be y
+   //    x & !y
+
+// I think this should be super simple in haskell
+
+// How boring, this isn't even a stack-based state-machine, technically.
+// I simply use the call-stack to do all the state-business... How boring.
+
+
+
+
+
+
+
+ vim:sts=2:sw=2
+
