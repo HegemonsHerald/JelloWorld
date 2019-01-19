@@ -5,7 +5,7 @@ public class regex_playground {
 	public static void main(String args[]) {
 
 		String ts0 = "honk";
-		String ts1 = " sldkfj [valid](linke) [va klsdjflid](linke)";
+		String ts1 = " sldkfj [valid](linke) [va klsdjflid](linke) [](sldkfj)";
 		String ts2 = "[valid validyp](linke)";
 		String ts3 = "[ invalid validyp](linke)";
 		String ts4 = "[valid validyp ](linke)";

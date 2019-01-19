@@ -1,6 +1,6 @@
 package series9;
 
-// programming.set9.markdown;
+// package programming.set9.markdown;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ public class LinkLister {
 
 
 	// Matches against a link
-	private static final String REGEX_BASE = "\\[([^ \\[\\]]|[^ \\[\\]][^\\[\\]]*[^ \\[\\]])\\]\\([^ ()]*\\)";
+	private static final String REGEX_BASE = "\\[([^ \\[\\]]|[^ \\[\\]][^\\[\\]]*[^ \\[\\]])\\]\\([^ ()]+\\)";
 
 	// Matches against a line containing a link
 	private static final String REGEX_FULL = ".*" + REGEX_BASE + ".*";
@@ -41,6 +41,8 @@ public class LinkLister {
 
 		// Where to put stuff
 		ArrayList<Link> links = new ArrayList<Link>();
+
+		if (markdown == null || markdown.equals("")) return links;
 
 		// Get lines!
 		String lines[] = markdown.split("\n");
