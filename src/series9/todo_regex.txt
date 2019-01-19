@@ -1,0 +1,67 @@
+
+
+
+Regex task plan
+
+0. split on newline
+1. match [[^[]]+]([^ ()]+) against the lines
+2. split on [
+3. for each match [^[]]+([^ ()]+) and capture the results
+4. check for invalid whitespace in [desc]
+
+0. word [word desc](alinkofsomekind)[    skldjf](sdjfllj)[desc](halflink
+1. matches
+2. "word ", "[", "word desc](alinkofsomekind)", "[", "    skldjf](sdjfllj)", "[desc](halflink"
+3. "word"				nope
+   "["					nope
+   "word desc](alinkofsomekind)"	yup	-> "word desc", "alinkofsomekind"
+   "["					nope
+   "    skldjf](sdjfllj)"		yup	-> "    skldjf", "sdjfllj"
+   "[desc](halflink"			nope, missing )
+4. "word desc"	yup	-> new link
+   "    skldjf"	nope	-> nope
+
+
+
+
+
+
+THIS ONE PROPERLY WORKS!
+
+\[[^ \[\]][^\[\]]*[^ \[\]]\@<=\]
+s1|--s2--||--s3--||---s4-----|s5
+
+regex with readability whitespace and spaces as ' ':
+\[ [^' '\[\] ]\@= [^ \[\] ]* [^' '\[\] ]\@<= \]
+s1 |-----s2-----| |---s3---| |------s4-----| s5
+
+Explanation
+s1  match [
+s2  match one character, that isn't ' ' or []           -> match at least one non-space char
+s3  maybe match any character, that isn't [] for any number of times, possibly none
+s4  maybe match one character, that isn't ' ' or [], zero width, but match after the match, so include the one cha
+s5  match ]
+
+
+[ks]       [s]                  << match this one
+[sth here] [sth here]           << match this one
+[ sth here]
+[sth here ]
+[ sth here ]
+
+
+
+THIS ONE WORKS AS WELL, BUT WITHOUT LOOKAROUND
+
+\[\([^ \[\]]\|[^ \[\]][^\[\]]*[^ \[\]]\)\]
+s1|-----------------s2-----------------|s5
+    |--s3--|  |-----------s4---------|
+
+s1  match [
+s2  capture group for concat alternative match
+s3  match 'not space nor [ nor ]' once
+s4  match 'not space nor [ nor ]', then 'not [ nor ]' any number of times, then 'not space nor [ nor ]'
+s5  match ]
+
+s3 matches '[l]' and alternatively
+s4 matches '[ab]' and '[a ldsfkj lsdkjf b]'

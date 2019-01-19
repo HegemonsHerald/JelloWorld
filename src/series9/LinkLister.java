@@ -40,16 +40,23 @@ public class LinkLister {
 	public static List<Link> extractLinks(String markdown) {
 
 		// Where to put stuff
+<<<<<<< Updated upstream
 		ArrayList<Link> links = new ArrayList<Link>();
 
 		if (markdown == null || markdown.equals("")) return links;
+=======
+		ArrayList<String> validLines  = new ArrayList<String>();
+		ArrayList<String> linkStrings = new ArrayList<String>();
+		ArrayList<Link>   links       = new ArrayList<Link>();
+>>>>>>> Stashed changes
 
 		// Get lines!
 		String lines[] = markdown.split("\n");
 
-		// From each line...
+		// For each line, check that it contains a valid link
 		for (String line : lines) {
 
+<<<<<<< Updated upstream
 			while (line.matches(REGEX_FULL)) {
 
 				// Get the first line
@@ -65,6 +72,33 @@ public class LinkLister {
 
 				// Remove it from the source line, for the next iteration (there might be multiple lines)
 				line = line.replaceFirst(REGEX_SBST, "");
+=======
+			// If the link doesn't have a space after the '['
+			// doesn't contain any '[]' in the description,
+			// matches '](',
+			// doesn't have any spaces or '()' in the link...
+			while (line.matches(".*\\[[^ \\[\\]][^\\[\\]]*\\]\\([^ \\(\\)]+\\).*")) {
+
+				// ... get the link candidate's description
+				String desc = line.replaceFirst(".*\\[([^ \\[\\]][^\\[\\]]*)\\]\\([^ \\(\\)]+\\).*", "$1");
+
+				// ... check that it doesn't have a space before the ']'
+				if (desc.matches(".*[^ ]")) {
+
+					// It doesn't, so this thing must be a valid link.
+
+					// Get the address
+					String addr = line.replaceFirst(".*\\[[^ \\[\\]][^\\[\\]]*\\]\\(([^ \\(\\)]+)\\).*", "$1");
+					
+					// Make a link of them and add it to the output
+					links.add(new Link(desc, addr));
+
+				}
+
+				// Try again, until there are no links left in the line!
+				// By removing the link(-candidate) we just dealt with
+				line = line.replaceFirst("\\[[^ \\[\\]][^\\[\\]]*\\]\\([^ \\(\\)]+\\)", "");
+>>>>>>> Stashed changes
 
 			}
 

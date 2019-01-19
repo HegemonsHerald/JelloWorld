@@ -1,7 +1,0 @@
-
-
-
-vim-codegen: generic param tags with <>
-
-LinkLister:
-  you were supposed to check for the conditions, not assume them
