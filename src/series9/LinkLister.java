@@ -4,10 +4,31 @@ package series9;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /** LinkLister. */
 public class LinkLister {
+
+
+	// Matches against a link
+	private static final String REGEX_BASE = "\\[([^ \\[\\]]|[^ \\[\\]][^\\[\\]]*[^ \\[\\]])\\]\\([^ ()]*\\)";
+
+	// Matches against a line containing a link
+	private static final String REGEX_FULL = ".*" + REGEX_BASE + ".*";
+
+	// Captures the first link, so it can be removed
+	private static final String REGEX_SBST = "(" + REGEX_BASE + ")";
+
+	// Captures the first link and everything after it, so everything after it can be removed
+	private static final String REGEX_FRST = "(" + REGEX_BASE + ").*";
+
+	// Captures the first link and everything before it, so everything before it can be removed
+	private static final String REGEX_LAST = "[^\\[]*(" + REGEX_BASE + ")";
+
+	// Captures the description of the link
+	private static final String REGEX_DESC = "\\[([^\\[\\]]+)\\]\\([^\\(\\)]*\\)";
+
+	// Caputres the link of the link
+	private static final String REGEX_LINK = "\\[[^\\[\\]]+\\]\\(([^\\(\\)]*)\\)";
 
 	/**
 	 * Extracts all links from the given Markdown-formatted String and returns them
@@ -19,8 +40,7 @@ public class LinkLister {
 	public static List<Link> extractLinks(String markdown) {
 
 		// Where to put stuff
-		ArrayList<String> linkStrings = new ArrayList<String>();
-		ArrayList<Link>   links       = new ArrayList<Link>();
+		ArrayList<Link> links = new ArrayList<Link>();
 
 		// Get lines!
 		String lines[] = markdown.split("\n");
@@ -28,45 +48,23 @@ public class LinkLister {
 		// From each line...
 		for (String line : lines) {
 
-			// ... get all the links
-			String linksFromLine[] = line.split("\\[");
+			while (line.matches(REGEX_FULL)) {
 
-			// ... for each link...
-			for (String link : linksFromLine) {
+				// Get the first line
+				String l = line.replaceFirst(REGEX_FRST, "$1");
+				l	 = l.replaceFirst(REGEX_LAST, "$1");
 
-				// ... if it's actually a link
-				if (link.matches(".*\\]\\(.*\\).*")) linkStrings.add(link);
+				// Get desc and line
+				String desc = l.replaceFirst(REGEX_DESC, "$1");
+				String link = l.replaceFirst(REGEX_LINK, "$1");
+
+				// Add to the lines
+				links.add(new Link(desc, link));
+
+				// Remove it from the source line, for the next iteration (there might be multiple lines)
+				line = line.replaceFirst(REGEX_SBST, "");
 
 			}
-
-		}
-
-		// Now remove all the non-link parts from the links,
-		// and build up the list of Links, they want
-		for (String l : linkStrings) {
-
-			/* split the link into its parts */
-
-			String desc = new String(l);
-			String link = new String(l);
-
-			// delete everything after the ]
-			desc = desc.replaceAll("\\].*", "");
-
-			// delete everything before and including the (
-			link = link.replaceAll(".*\\]\\(", "");
-
-			// delete everything after and including the )
-			link = link.replaceAll("\\).*", "");
-
-			// add the new link to the link-list
-			links.add(new Link(desc, link));
-
-
-			// So right, apparently I HAVE to use replaceAll or replaceFirst, I can't just go replace, cause replace is only for single chars.
-			// What bollocks!
-
-			// Also, the capture groups just don't work. Like at all.
 
 		}
 
