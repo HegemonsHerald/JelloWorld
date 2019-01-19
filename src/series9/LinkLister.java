@@ -4,6 +4,7 @@ package series9;
 
 import java.util.ArrayList;
 import java.util.List;
+import series9.Link;
 
 /** LinkLister. */
 public class LinkLister {
