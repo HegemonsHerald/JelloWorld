@@ -1,80 +1,0 @@
-These Java-specific keymaps and macros are defined in my current .vimrc
-They are set with an autocmd, when the filetype turns to 'java'
-
-
-NORMAL MODE
-\jms	java method static
-\jmsp	java method static public
-\jm 	java method
-\jmp	java method public
-
-\jsf	java static final
-\jsfp	java static final public
-
-\js	java System.out.println...
-
-
-INSERT MODE
-\js	wrap with println
-
-jp	java private
-jP	java Public
-
-jif	java if block
-Jif	java if one-liner
-jel	java else if block
-Jel	java else if one-liner
-jelse	java else block
-
-jfor	java for standard loop
-jwhile	java while standard loop
-jdo	java do while standard loop
-
-joj	java object
-jarr	java array
-Jarr	java array literal
-
-
-USAGE OF ITEMIZED INPUTS
-jfor, jwhile, jdo
- - substitute counter variable
- - ; to jump to reference variable
-
-joj, jarr
- - substitute type
- - w to jump to name
- - fa to jump to parameters or 2w to jump after the =
-
-
-
-Here are the actual commands:
-
-autocmd FileType java inoremap <leader>jms OSi	private static TYPE NAME(ARGS) { <BS>}4kfN:s/TYPE//g<Left><Left>
-autocmd FileType java inoremap <leader>jmsp OSi	public static TYPE NAME(ARGS) { <BS>}4kfN:s/TYPE//g<Left><Left>
-autocmd FileType java inoremap <leader>jm OSi	private TYPE NAME(ARGS) { <BS>}4kfN:s/TYPE//g<Left><Left>
-autocmd FileType java inoremap <leader>jmp OSi	public TYPE NAME(ARGS) { <BS>}4kfN:s/TYPE//g<Left><Left>
-autocmd FileType java inoremap <leader>jsf I	private static final TYPE NAME = VALUE;3bve
-autocmd FileType java inoremap <leader>jsfp I	public static final TYPE NAME = VALUE;3bve
-autocmd FileType java inoremap <leader>js System.out.println()<Left>
-autocmd FileType java nnoremap <leader>js ISystem.out.println(<Esc>A)<Esc>F(
-
-autocmd FileType java inoremap jp private
-autocmd FileType java inoremap jP public
-
-autocmd FileType java inoremap jif if () { <BS>}<Esc>4kf(a
-autocmd FileType java inoremap Jif if () ;<Left><Left><Left>
-autocmd FileType java inoremap jel else if () { <BS>}<Esc>4kf(a
-autocmd FileType java inoremap Jel else if () ;<Left><Left><Left>
-autocmd FileType java inoremap jelse else { <BS>}<Esc><Up><Up>A
-
-inoremap jfor for (int counter = 0; counter < VAR, counter++) { <BS>}<Esc>4kfV:s/counter//g<Left><Left>
-inoremap jwhile while (counter < VAR) {counter++;}<Esc>4kfVV<Down><Down>:s/counter//g<Left><Left>
-inoremap jdo do {counter++;} while (counter < Var);<Esc>:norm 0<Enter>fVV<Up><Up>:s/counter//g<Left><Left>
-
-
-rename :s/.../.../gc
-use C-o to jump to previous cursor position after substitute
-consider turning some of these into functions, that ask for prompts and generate interactively
-you can chain commands with cmd|cmd
-
-
