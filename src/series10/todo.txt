@@ -1,34 +1,6 @@
 
 
 
-Artificial Art: Use the Dragon Curve
-
-  - Dragon Curve Fractal? Somehow?
-
-  - Or do this one:
-    Take the larger dimension (X or Y)
-    Say X is larger
-    Start at tile (Y/2,0)
-    Move with X++ until you reach tile (Y/2,X/2) [the center]
-    Each time you move, you increase the resolution of the tiling:
-      The outer most tile is just a square
-      The second is 4 squares
-      The third is 8 squares
-      etc
-    Impl: Create 2d array
-    use (center - coord) as a vector
-    based on the length, decide on the fraction to use for tiling
-
-    Color Gradient based on the vector direction and length?
-    Say Length (to subtile) maps to R,
-        X maps to G,
-        Y maps to B
-    Or actually do a circular gradient just based on the length to
-    sub tiles of a tile
-
-  - Or do this one: hard code a couple of Square Packing Problems
-
-
 
 Extra Task: Parse PN
 
