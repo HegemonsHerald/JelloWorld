@@ -1,4 +1,4 @@
-// package series11;
+package series11;
 
 public class BrownieMapPLayground {
 

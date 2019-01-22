@@ -1,4 +1,4 @@
-//  package series11;
+package series11;
 
 // package programming.set11.brownies;
 
@@ -16,10 +16,10 @@ import java.util.Vector;
 public class BrownieMap<K, V> {
 
 	// Used for modulo operation, also the number of buckets to use
-	private int Divisor;
+	private int divisor;
 
 	// These boots are made for walking, an one day, these boots are gonna -- BUUUCKEET!
-	private ArrayList<Vector<Pair>> Buckets;
+	private ArrayList<Vector<Pair>> buckets;
 
 	/**
 	 * Lil' helper, cause having pseudo tuples is still better than having no tuples at all.
@@ -46,21 +46,21 @@ public class BrownieMap<K, V> {
 	/**
 	 * BrownieMap.
 	 *
-	 * @param numberOfBuckets	A value for numberOfBuckets
+	 * @param numberOfbuckets	A value for numberOfbuckets
 	 *
-	 * @throws IllegalArgumentException	This method might throw an IllegalArgumentException, if the {@code numberOfBuckets } is smaller than 1.
+	 * @throws IllegalArgumentException	This method might throw an IllegalArgumentException, if the {@code numberOfbuckets } is smaller than 1.
 	 */
-	public BrownieMap(int numberOfBuckets) {
+	public BrownieMap(int numberOfbuckets) {
 
 		// Yup.
-		if (numberOfBuckets < 1) throw new IllegalArgumentException();
+		if (numberOfbuckets < 1) throw new IllegalArgumentException();
 
-		Divisor = numberOfBuckets;
+		divisor = numberOfbuckets;
 
 		// Initialize all the buckets
-		Buckets = new ArrayList<Vector<Pair>>();
-		for (int i = 0; i < Divisor; i++) {
-			Buckets.add(new Vector<Pair>());
+		buckets = new ArrayList<Vector<Pair>>();
+		for (int i = 0; i < divisor; i++) {
+			buckets.add(new Vector<Pair>());
 		}
 
 	}
@@ -88,8 +88,8 @@ public class BrownieMap<K, V> {
 
 		// Get the bucket to put it in
 		int hash = key.hashCode();
-		int modh = Math.abs(hash) % Divisor;
-		Vector<Pair> bucket = Buckets.get(modh);
+		int modh = Math.abs(hash) % divisor;
+		Vector<Pair> bucket = buckets.get(modh);
 
 		// Put it in the bucket
 		bucket.add(p);
@@ -112,8 +112,8 @@ public class BrownieMap<K, V> {
 
 		// Get the bucket the key's Pair should be in
 		int hash = key.hashCode();
-		int modh = Math.abs(hash) % Divisor;
-		Vector<Pair> bucket = Buckets.get(modh);
+		int modh = Math.abs(hash) % divisor;
+		Vector<Pair> bucket = buckets.get(modh);
 
 		// Find the actual Pair
 		Pair p = null;
@@ -144,15 +144,15 @@ public class BrownieMap<K, V> {
 		V value = get(key);
 
 		// If there's no value, then the key wasn't in any of the
-		// Buckets, so there's nothing to remove
+		// buckets, so there's nothing to remove
 		if (value == null) return;
 
 		// Rebuild the Object to remove...
 		Pair p = new Pair(key, value);
 
-		for (int i = 0; i < Divisor; i++) {
+		for (int i = 0; i < divisor; i++) {
 
-			Vector<Pair> v = Buckets.get(i);
+			Vector<Pair> v = buckets.get(i);
 
 			for (int j = 0; j < v.size(); j++) {
 
@@ -172,7 +172,7 @@ public class BrownieMap<K, V> {
 	 */
 	public void clear() {
 
-		for (Vector<Pair> v : Buckets) {
+		for (Vector<Pair> v : buckets) {
 
 			v.removeAllElements();
 
