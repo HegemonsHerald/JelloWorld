@@ -1,29 +1,65 @@
-package series9;
+package series12;
 
-// package programming.set9.zelda;
+// package programming.set12.zelda;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * ZeldaList.
  *
  * @param <T>	A value for T
  */
-public class ZeldaList<T> implements Iterator, Iterable {
+public class ZeldaList<T> implements Iterable {
 
-	public class Iterator<T> {
+	/**
+	 * Huh.
+	 *
+	 * @return 	well iterator
+	 */
+	public Iterator<T> iterator() {
 
-		// how does this thing work?
-		// keep a reference to the current element
-		// on next() replace that reference with the next elemnet's refernce and return the ref
-		//   check with hasNext() and throw NoSuchElementException if it doesn't exist
-		// on hasNext() ask the reffed object for the lenght of the remaining list and compare to 0
+		return new ZeldaListIterator();
 
 	}
 
+	/**
+	 * Hmmmmmmmm.
+	 */
+	class ZeldaListIterator implements Iterator<T> {
 
+		private int counter = 0;
+		
+		/**
+		 * Does it have a next?.
+		 *
+		 * @return 	yes or no
+		 */
+		public boolean hasNext() {
+			if (counter <= size()) return true;
+			else return false;
+		}
 
+		/**
+		 * Give me the next.
+		 *
+		 * @throws NoSuchElementException	IT GONE BROKE
+		 *
+		 * @return 	oui oui
+		 */
+		public T next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			T elem = get(counter);
+			counter++;
+			return elem;
+		}
+
+	}
 
 	// Where to put the head of this linked list.
-	private ZeldaElement<T> head;
+	public  ZeldaElement<T> head;
 
 	/**
 	 * Adds the given value to the end of the list.

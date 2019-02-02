@@ -25,3 +25,14 @@
  *
  * - while loop this with some kind of sentinel expression
  *     this depends on whether values are left, so first thing in the loop: check that there is more to do!
+ */
+
+package series12;
+
+public class ExHandler {
+
+}
+
+private class OperatorException extends Exception {
+
+}
